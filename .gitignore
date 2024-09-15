@@ -1,0 +1,29 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# MongoDB data
+backend/data/
+
+# Docker artifacts
+docker-compose.override.yml
+docker-compose.override.yaml
+.docker/
+
+# VS Code settings
+.vscode/
+
+# Flutter build files
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache
+.pub/
