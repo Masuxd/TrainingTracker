@@ -31,3 +31,5 @@ services:
       - "3000:3000"
     depends_on:
       - mongodb
+    environment:
+      ADB_SERVER_SOCKET: tcp:host.docker.internal:5037
