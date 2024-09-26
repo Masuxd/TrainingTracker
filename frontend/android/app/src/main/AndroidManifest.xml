@@ -1,7 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.koulu.trainingtracker">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:label="frontend"
-        android:name="${applicationName}"
+        android:name=".MainActivity"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
