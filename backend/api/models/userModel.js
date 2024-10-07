@@ -6,27 +6,23 @@ const userSchema = new mongoose.Schema({
   fname: String,
   lname: String,
   birthdate: Date,
+  height: Number,
+  weight: Number,
   email: String,
   phone: String,
   role: String,
   friends: [mongoose.Schema.Types.ObjectId],
-  trainee_info: {
-    height: Number,
-    weight: Number,
-    coach: [mongoose.Schema.Types.ObjectId],
-    club: mongoose.Schema.Types.ObjectId,
-    team: mongoose.Schema.Types.ObjectId,
-    team_number: Number,
-    training_sessions: [mongoose.Schema.Types.ObjectId],
-    training_plans: [mongoose.Schema.Types.ObjectId]
+  training_sessions: [mongoose.Schema.Types.ObjectId],
+  training_plans: [mongoose.Schema.Types.ObjectId],
+  athlete_info: {
+    divisions: [mongoose.Schema.Types.ObjectId],
+    teams: [mongoose.Schema.Types.ObjectId],
     },
     coach_info: {
-        club: mongoose.Schema.Types.ObjectId,
+        divisions: [mongoose.Schema.Types.ObjectId],
         coaching_teams: [mongoose.Schema.Types.ObjectId],
-        trainees: [mongoose.Schema.Types.ObjectId],
-        coaching_sessions: [mongoose.Schema.Types.ObjectId]
     }
-}, { collection: 'users' });
+}, { collection: 'user' });
 
 const User = mongoose.model('User', userSchema);
 
