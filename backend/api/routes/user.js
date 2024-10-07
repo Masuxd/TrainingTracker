@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const usersController = require('../controllers/usersController');
+const userController = require('../controllers/userController');
 
-router.get('/', usersController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // Add more routes as needed
 
