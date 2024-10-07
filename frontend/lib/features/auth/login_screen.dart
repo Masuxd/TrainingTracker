@@ -25,6 +25,14 @@ class LoginScreen extends StatelessWidget {
 
   Future<String?> _signupUser(SignupData data) {
     return Future.delayed(loginTime).then((_) {
+      if (mockUsers.containsKey(data.name)) {
+        debugPrint("User already exists: ${data.name}");
+        return "User already exists";
+      }
+
+      mockUsers[data.name!] = data.password!;
+      debugPrint("User signed up successfully: ${data.name}");
+
       return null;
     });
   }
