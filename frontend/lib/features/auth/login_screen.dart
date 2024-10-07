@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontend/features/home/home_screen.dart';
+
+import './mock_users.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
-  /*
+
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
   Future<String?> _loginUser(LoginData data) {
     return Future.delayed(loginTime).then((_) {
-      if(!mockUsers.containsKey(data.email)) {
-        return 'User doesn't exists';
+      if (!mockUsers.containsKey(data.name)) {
+        return "User doesn't exist";
       }
-      if(mockUsers[data.email] != data.password) {
-        return 'Password does not match';
+      if (mockUsers[data.name] != data.password) {
+        return "Password does not match";
       }
       return null;
     });
   }
 
-  Future<String?> _signupUser(Signup data) {
+  Future<String?> _signupUser(SignupData data) {
     return Future.delayed(loginTime).then((_) {
       return null;
     });
   }
 
-  Future<String?> _recoverPassword(String email) {
+  Future<String?> _recoverPassword(String name) {
     return Future.delayed(loginTime).then((_) {
-      if(!mockUsers.contains(email)) {
-        return 'User doesn't exists';
+      if (!mockUsers.containsKey(name)) {
+        return "User doesn't exists";
       }
       return null;
     });
@@ -40,7 +43,7 @@ class LoginScreen extends StatelessWidget {
       return null;
     });
   }
-  */
+
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
@@ -86,9 +89,33 @@ class LoginScreen extends StatelessWidget {
         }
         return null;
       },
-      onLogin: (loginData) {},
-      onSignup: (signupData) {},
-      onRecoverPassword: (name) {},
+      onLogin: (loginData) {
+        debugPrint('Login info');
+        debugPrint('Email ${loginData.name}');
+        debugPrint('Password ${loginData.password}');
+        return _loginUser(loginData);
+      },
+      onSignup: (signupData) {
+        debugPrint('Signup info');
+        debugPrint('Name ${signupData.name}');
+        debugPrint('Password ${signupData.password}');
+
+        signupData.additionalSignupData?.forEach((key, value) {
+          debugPrint('$key: $value');
+        });
+
+        return _signupUser(signupData);
+      },
+      onSubmitAnimationCompleted: () {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => HomeScreen(),
+        ));
+      },
+      onRecoverPassword: (name) {
+        debugPrint('Recover password info');
+        debugPrint('Name $name');
+        return _recoverPassword(name);
+      },
       headerWidget: const IntroWidget(),
     );
   }
