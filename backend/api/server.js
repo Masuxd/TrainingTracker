@@ -12,6 +12,7 @@ mongoose.connect('mongodb://root:example@mongodb:27017/exampledb?authSource=admi
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
+app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/exercise', exerciseRoutes);
 app.use('/trainingPlan', trainingPlanRoutes);
