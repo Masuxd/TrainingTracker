@@ -32,6 +32,7 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }));
 
+
 // set routes
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
