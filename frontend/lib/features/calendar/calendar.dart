@@ -36,17 +36,15 @@ class _MyAppState extends State<MyApp> {
     return Column(
       children: [
         const Text("Hellou"),
-        Container(
-          child: TableCalendar(
-            headerStyle: const HeaderStyle(
-                formatButtonVisible: false, titleCentered: true),
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            selectedDayPredicate: (day) => isSameDay(day, today),
-            firstDay: DateTime.utc(2010, 1, 1),
-            lastDay: DateTime.utc(2040, 12, 31),
-            focusedDay: today,
-            onDaySelected: _onDaySelected,
-          ),
+        TableCalendar(
+          headerStyle: const HeaderStyle(
+              formatButtonVisible: false, titleCentered: true),
+          startingDayOfWeek: StartingDayOfWeek.monday,
+          selectedDayPredicate: (day) => isSameDay(day, today),
+          firstDay: DateTime.utc(2010, 1, 1),
+          lastDay: DateTime.utc(2040, 12, 31),
+          focusedDay: today,
+          onDaySelected: _onDaySelected,
         ),
       ],
     );
