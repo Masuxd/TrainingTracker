@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'cookie_storage.dart';
+import '../cookie_storage.dart';
 
 class AuthService {
   static const String baseUrl = 'http://localhost:3000/auth';
@@ -43,7 +43,8 @@ class AuthService {
 
   static Future<http.Response> fetchProtectedResource() async {
     // Ensure the Cookie header is correctly formatted
-    final cookieHeader = headers.entries.map((e) => '${e.key}=${e.value}').join('; ');
+    final cookieHeader =
+        headers.entries.map((e) => '${e.key}=${e.value}').join('; ');
 
     final response = await http.get(
       Uri.parse('$baseUrl/protected'),
