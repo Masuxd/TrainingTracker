@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './features/auth/login_screen.dart';
+import './common/navigation/app_routes.dart';
+//import './features/home/home_screen.dart';
 
 void main() {
   runApp(Main());
@@ -11,7 +12,9 @@ class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
+      initialRoute: '/',
+      onGenerateRoute: AppRoutes.generateRoute,
+      //home: TrainingTracker(),
     );
   }
 }
