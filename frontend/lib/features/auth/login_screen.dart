@@ -116,7 +116,8 @@ class LoginScreen extends StatelessWidget {
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) =>
+              HomePage(), //muutin kun kirjoitin home_screen.dart koodia
         ));
       },
       onRecoverPassword: (name) {

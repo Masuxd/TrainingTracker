@@ -1,43 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:frontend/features/home/exercise_page.dart'; // kello
 
-class TrainingTracker extends StatelessWidget {
-  const TrainingTracker({super.key});
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => HomeScreenState(),
-      child: HomeScreen(),
+    return MaterialApp(
+      theme: ThemeData(),
+      home: const HomePage(),
     );
   }
 }
 
-class HomeScreenState extends ChangeNotifier {}
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // var state = context.watch<HomeScreenState>();
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Training Tracker'),
+        title: const Text('Home Page'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: null,
-              child: Text('Start a Workout'),
-            ),
-            SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: null,
-              child: Text('Plan a workout'),
-            ),
-          ],
+        child: ElevatedButton(
+          onPressed: () {
+            // Navigoi Exercise sivulle
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ExercisePage()),
+            );
+          },
+          child: const Text("Start an exercise"),
         ),
       ),
     );
