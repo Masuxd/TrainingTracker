@@ -14,7 +14,7 @@ router.post('/verify-email', accVerifyController.verifyEmail);
 router.post('/reset-password', resetPasswordController.passwordReset);
 router.post('request-password-reset', resetPasswordController.passwordResetReq);
 router.post('verify-reset-code', resetPasswordController.verifyResetCode);
-router.post/'logout', logoutController.logout;
+router.post('/logout', logoutController.logout);
 //router.post('/update-password', authController.updatePassword);
 
 module.exports = router;
