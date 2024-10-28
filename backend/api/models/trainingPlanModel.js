@@ -14,8 +14,8 @@ const trainingPlanSchema = new mongoose.Schema({
         distance: Number,
     }
     }],
-}, { collection: 'training_session' });
+}, { collection: 'training_plan' });
 
-const TrainingPlan = mongoose.model('Training_session', trainingPlanSchema);
+const TrainingPlan = mongoose.model('Training_plan', trainingPlanSchema);
 
 module.exports = TrainingPlan;

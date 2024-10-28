@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+  verified: { type: Boolean, default: false },
+  deleteAt: { type: Date, expires: '7d', default: undefined },
   username: String,
   password: String,
   fname: String,
