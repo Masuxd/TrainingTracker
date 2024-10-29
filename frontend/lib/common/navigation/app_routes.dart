@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/auth/login_screen.dart';
+import 'package:frontend/start_workout.dart';
 import '../../profile_screen.dart';
 import '../../features/home/home_screen.dart';
 
@@ -12,6 +13,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => TrainingTracker());
       case '/profile':
         return MaterialPageRoute(builder: (_) => TrainingProfile());
+      case '/start-workout':
+        return MaterialPageRoute(builder: (_) => StartWorkout());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

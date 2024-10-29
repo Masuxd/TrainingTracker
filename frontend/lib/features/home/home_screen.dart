@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../common/widgets/layout_widget.dart';
+import '../../common/widgets/workout_widget.dart';
 
 class TrainingTracker extends StatelessWidget {
   const TrainingTracker({super.key});
@@ -32,7 +33,9 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-            onPressed: null,
+            onPressed: () {
+              Navigator.pushNamed(context, '/start-workout');
+            },
             child: Text('Start a Workout'),
           ),
           SizedBox(height: 15),
@@ -40,6 +43,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: null,
             child: Text('Plan a workout'),
           ),
+          SizedBox(height: 15),
         ],
       ),
     );
