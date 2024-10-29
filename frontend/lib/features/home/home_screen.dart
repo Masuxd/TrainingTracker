@@ -40,7 +40,9 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 15),
           ElevatedButton(
-            onPressed: null,
+            onPressed: () {
+              Navigator.pushNamed(context, '/plan-workout');
+            },
             child: Text('Plan a workout'),
           ),
           SizedBox(height: 15),
