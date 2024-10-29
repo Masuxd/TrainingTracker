@@ -23,31 +23,10 @@ class _MainLayoutState extends State<MainLayout> {
     }
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    debugPrint('Current child: ${widget.child.runtimeType}');
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: widget.child,
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.2,
-          child: NavBar(
-            currentIndex: widget.currentIndex,
-            onTap: _onItemTapped,
-          ),
-        ),
-      ],
-    );
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widget.child, // Main content takes up the rest of the screen
+      body: widget.child,
       bottomNavigationBar: NavBar(
         currentIndex: widget.currentIndex,
         onTap: _onItemTapped,
