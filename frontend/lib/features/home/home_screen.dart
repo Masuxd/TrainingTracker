@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/home/exercise_page.dart';
+import 'package:frontend/features/home/exercise_page.dart'; // kello
 
 void main() {
   runApp(const MyApp());
