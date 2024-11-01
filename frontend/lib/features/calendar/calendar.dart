@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart'; // flutter calendar package
 
 void main() {
-  runApp(MaterialApp(home: MyApp()));
+  runApp(const Calendar());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class Calendar extends StatefulWidget {
+  const Calendar({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<Calendar> createState() => _CalendarState();
 }
 
 class Event {
@@ -20,7 +20,7 @@ class Event {
   String toString() => name;
 }
 
-class _MyAppState extends State<MyApp> {
+class _CalendarState extends State<Calendar> {
   DateTime today = DateTime.now();
   final TextEditingController _eventController = TextEditingController();
   final Map<DateTime, List<Event>> events = {};

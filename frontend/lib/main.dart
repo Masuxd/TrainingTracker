@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './features/auth/login_screen.dart';
+
 
 void main() {
   runApp(Main());
@@ -10,8 +10,7 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LoginScreen(),
+    return Scaffold(
     );
   }
 }
