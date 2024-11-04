@@ -121,7 +121,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/features/settings/theme_provider.dart';
 import 'package:frontend/features/settings/theme.dart';
-import 'package:frontend/features/settings/button.dart';
 
 
 void main() {
@@ -142,7 +141,8 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           title: 'Settings Page',
-          theme: themeProvider.themeData, // Use themeProvider to access themeData
+          theme:
+              themeProvider.themeData, // Use themeProvider to access themeData
           home: const SettingsPage(), // Set the home page
         );
       },
@@ -202,10 +202,12 @@ class _SettingsPageState extends State<SettingsPage> {
             buildNotificationOption(
               "Change to dark theme",
               context,
-              true, // For the theme switch, we pass `true` to indicate it uses the theme provider
+              true,
             ),
-            buildNotificationOption("Screen lock", context, false, onChangeFunction2, valNotify2),
-            buildNotificationOption("Unit of measure", context, false, onChangeFunction3, valNotify3),
+            buildNotificationOption(
+                "Screen lock", context, false, onChangeFunction2, valNotify2),
+            buildNotificationOption("Unit of measure", context, false,
+                onChangeFunction3, valNotify3),
           ],
         ),
       ),
@@ -213,7 +215,8 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Padding buildNotificationOption(
-      String title, BuildContext context, bool isThemeSwitch, [Function? onChangedMethod, bool? value]) {
+      String title, BuildContext context, bool isThemeSwitch,
+      [Function? onChangedMethod, bool? value]) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: Row(
@@ -232,12 +235,16 @@ class _SettingsPageState extends State<SettingsPage> {
             child: CupertinoSwitch(
               activeColor: Colors.green,
               trackColor: Colors.grey,
-              value: isThemeSwitch ? Provider.of<ThemeProvider>(context).themeData == darkMode : value ?? false,
+              value: isThemeSwitch
+                  ? Provider.of<ThemeProvider>(context).themeData == darkMode
+                  : value ?? false,
               onChanged: (bool newValue) {
                 if (isThemeSwitch) {
-                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme(); // Call toggleTheme for theme switch
+                  Provider.of<ThemeProvider>(context, listen: false)
+                      .toggleTheme(); // Call toggleTheme for theme switch
                 } else if (onChangedMethod != null) {
-                  onChangedMethod(newValue); // Call the specific function for other switches
+                  onChangedMethod(
+                      newValue); // Call the specific function for other switches
                 }
               },
             ),
