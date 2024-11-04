@@ -4,6 +4,7 @@ const trainingPlanSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
   start_time: Date,
   end_time: Date,
+  description: String,
   set: [{
     exercise: mongoose.Schema.Types.ObjectId,
     recovery_time: Date,
@@ -12,6 +13,7 @@ const trainingPlanSchema = new mongoose.Schema({
         duration: Date,
         weight: Number,
         distance: Number,
+        speed: Number,
     }
     }],
 }, { collection: 'training_plan' });

@@ -4,7 +4,13 @@ const userController = require('../controllers/userController');
 const { authenticateSession } = require('../middleware/sessionMiddleware');
 
 // Apply sessionMiddleware to routes that require authentication
-router.get('/', authenticateSession, userController.getAllUsers);
+router.use(authenticateSession);
+router.get('/:username', userController.getUserByUsername);
+router.get('/:username', userController.getOwnProfile);
+router.get('/friends', userController.getFriends);
+router.get('/search', userController.searchUsers);
+
+
 // Add more routes as needed
 
 module.exports = router;
