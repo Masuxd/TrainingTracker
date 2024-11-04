@@ -19,6 +19,7 @@ dependencies:
   http: ^1.2.2
 
   cupertino_icons: ^1.0.8
+  provider: #tarvitaan provideriin light and dark theme
   flutter_login: ^5.0.0
 
   collection: ^1.18.0
