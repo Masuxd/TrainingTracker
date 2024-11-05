@@ -16,10 +16,8 @@ class AuthService {
     if (response.statusCode == 200) {
       // Extract cookies from the response headers
       String? rawCookie = response.headers['set-cookie'];
-      if (rawCookie != null) {
-        await CookieStorage.parseAndStoreCookies(rawCookie);
-        headers = await CookieStorage.loadCookies();
-      }
+      await CookieStorage.parseAndStoreCookies(rawCookie!);
+      headers = await CookieStorage.loadCookies();
       return true;
     } else {
       return false;
