@@ -7,6 +7,6 @@ const divisionSchema = new mongoose.Schema({
     teams: [mongoose.Schema.Types.ObjectId],
 }, { collection: 'division' });
 
-const Division = mongoose.model('Team', divisionSchema);
+const Division = mongoose.model('Division', divisionSchema);
 
 module.exports = Division;
