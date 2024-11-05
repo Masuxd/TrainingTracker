@@ -15,7 +15,7 @@ async function getOwnProfile(req, res) {
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: get profile' });
   }
 };
 
@@ -35,16 +35,30 @@ async function searchUsers(req, res) {
         { lastName: regex },
         { $expr: { $regexMatch: { input: { $concat: ['$firstName', ' ', '$lastName'] }, regex: query, options: 'i' } } }
       ]
-    }).select('-password -email'); // Exclude sensitive fields
+    }).select('username, fname, lname'); // Exclude sensitive fields
 
     res.json(users);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: search user' });
+  }
+}
+
+async function getUserByUsername(req, res) {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error: get user by username' });
   }
 }
 
 
 module.exports = {
+  getUserByUsername,
   getOwnProfile,
   searchUsers
 };

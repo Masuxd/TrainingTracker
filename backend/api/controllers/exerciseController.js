@@ -1,5 +1,3 @@
-const exercise = require('../models/exerciseModel');
-
 const Exercise = require('../models/exerciseModel');
 
 async function getAllExercises(req, res) {
@@ -7,7 +5,7 @@ async function getAllExercises(req, res) {
     const exercises = await Exercise.find();
     res.json(exercises);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: get exercise-list' });
   }
 }
 
@@ -20,7 +18,7 @@ async function getExerciseById(req, res) {
     }
     res.json(exercise);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: get exercise by ID' });
   }
 }
 
@@ -40,7 +38,7 @@ async function searchExercises(req, res) {
     });
     res.json(exercises);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: search exercise' });
   }
 }
 

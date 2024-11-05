@@ -5,9 +5,9 @@ const { authenticateSession } = require('../middleware/sessionMiddleware');
 
 // Apply sessionMiddleware to routes that require authentication
 router.use(authenticateSession);
-router.get('/:username', userController.getUserByUsername);
-router.get('/:username', userController.getOwnProfile);
-router.get('/friends', userController.getFriends);
+//router.get('/:username', userController.getUserByUsername);
+router.get('/bio', userController.getOwnProfile);
+//router.get('/friends', userController.getFriends);
 router.get('/search', userController.searchUsers);
 
 

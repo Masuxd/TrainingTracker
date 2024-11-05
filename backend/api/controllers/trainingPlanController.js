@@ -15,7 +15,7 @@ async function getTrainingPlanById(req, res) {
     }
     res.json(trainingPlan);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: get plan' });
   }
 }
 
@@ -26,10 +26,10 @@ async function getTrainingPlansByUserId(req, res) {
       return res.status(401).json({ error: 'Unauthorized: No session found' });
     }
 
-    const trainingPlans = await TrainingPlan.find({ user_id: userId }).populate('sessions');
+    const trainingPlans = await TrainingPlan.find({ user_id: userId });
     res.json(trainingPlans);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: get plan list' });
   }
 }
 
@@ -40,21 +40,21 @@ async function saveTrainingPlan(req, res) {
       return res.status(401).json({ error: 'Unauthorized: No session found' });
     }
 
-    const { name, description, start_date, end_date, sessions } = req.body;
+    const { name, description, start_date, end_date, set } = req.body;
 
     const newTrainingPlan = new TrainingPlan({
       user_id: userId,
-      name,
-      description,
-      start_date,
-      end_date,
-      set
+      name: name,
+      description: description,
+      start_time: start_date,
+      end_time: end_date,
+      set: set
     });
 
     await newTrainingPlan.save();
     res.status(201).json(newTrainingPlan);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error: save plan' });
   }
 }
 
