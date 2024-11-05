@@ -26,6 +26,8 @@ const userSchema = new mongoose.Schema({
     }
 }, { collection: 'user' });
 
+userSchema.index({ username: 'text', firstName: 'text', lastName: 'text' });
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

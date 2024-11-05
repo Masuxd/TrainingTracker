@@ -84,7 +84,7 @@ res.sendStatus(201);
 
 } catch (error) {
     console.error('Error during registration:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Internal Server Error: register');
 }
 
 };

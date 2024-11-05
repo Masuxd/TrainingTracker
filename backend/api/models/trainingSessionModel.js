@@ -4,16 +4,19 @@ const trainingSessionSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
   start_time: Date,
   end_time: Date,
+  finished: Boolean,
   set: [{
     exercise: mongoose.Schema.Types.ObjectId,
     recovery_time: Date,
-    rep: {
+    finished: Boolean,
+    rep: [{
         repetitions: Number,
         weight: Number,
         duration: Date,
         distance: Number,
         speed: Number,
-    }
+        finished: Boolean,
+    }]
     }],
 }, { collection: 'training_session' });
 
