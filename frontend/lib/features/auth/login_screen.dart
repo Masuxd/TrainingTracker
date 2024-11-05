@@ -95,6 +95,11 @@ class LoginScreen extends StatelessWidget {
         if (value!.isEmpty) {
           return 'Password is empty';
         }
+
+        // TODO: how to validate password length on signup only
+        /*if (value.length < 5) {
+          return 'Password should be longer that 4 characters';
+        }*/
         return null;
       },
       onLogin: (loginData) {
@@ -116,7 +121,7 @@ class LoginScreen extends StatelessWidget {
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) => TrainingTracker(),
         ));
       },
       onRecoverPassword: (name) {
