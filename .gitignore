@@ -27,3 +27,5 @@ build/
 .packages
 .pub-cache
 .pub/
+
+scripts/

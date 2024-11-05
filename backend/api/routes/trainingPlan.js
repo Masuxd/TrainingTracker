@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const trainingPlanController = require('../controllers/trainingPlanController');
+const { authenticateSession } = require('../middleware/sessionMiddleware');
 
-router.get('/', trainingPlanController.getAllTrainingPlans);
+// Apply sessionMiddleware to routes that require authentication
+router.use(authenticateSession);
 
-// Add more routes as needed
+router.get('/:id', trainingPlanController.getTrainingPlanById);
+router.get('/user/plans', trainingPlanController.getTrainingPlansByUserId);
+router.post('/save', trainingPlanController.saveTrainingPlan);
 
 module.exports = router;

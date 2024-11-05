@@ -29,7 +29,11 @@ const mongoUrl = 'mongodb://root:example@mongodb:27017/exampledb?authSource=admi
 mongoose.connect(mongoUrl, {
   useUnifiedTopology: true,
 })
-  .then(() => console.log('Connected to MongoDB'))
+  .then(() => {
+    console.log('Connected to MongoDB')
+    //destroy all data in the database for testing purposes
+    nukeDatabase();
+  })
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
 app.use(express.json());
@@ -59,6 +63,7 @@ app.use('/user', userRoutes);
 app.use('/exercise', exerciseRoutes);
 app.use('/trainingPlan', trainingPlanRoutes);
 app.use('/trainingSession', trainingSessionRoutes);
+
 
 if (isProduction) {
   const options = {
