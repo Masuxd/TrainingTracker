@@ -2,7 +2,7 @@ require('dotenv').config();
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
 const mailgun = new Mailgun(formData);
-const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY});
+const mg = mailgun.client({username: 'api', key: 'api_key'});
 
 function sendEmail(to, subject, html) {
   const message = {
@@ -12,7 +12,7 @@ function sendEmail(to, subject, html) {
     html
   };
 
-  return mg.messages.create(process.env.MAILGUN_DOMAIN, message)
+  return mg.messages.create('mailgun_domain', message)
     .then(msg => console.log(msg)) // logs response data
     .catch(err => console.log(err)); // logs any error
 }
