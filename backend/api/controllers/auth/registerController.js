@@ -3,11 +3,9 @@ const Verification = require('../../models/verificationModel');
 
 const User = require('../../models/userModel');
 const bcrypt = require('bcrypt');
-const session = require('express-session');
 
 
 const register = async (req, res) => {
-
 try {
     console.log('Request body:', req.body);
 
