@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
+import 'dart:async';
 
 class StartWorkout extends StatelessWidget {
   const StartWorkout({super.key});
@@ -20,13 +21,46 @@ class StartWorkout extends StatelessWidget {
 }
 
 class StartWorkoutState extends ChangeNotifier {
-  bool hasWorkout = false;
-  String? selectedWorkout;
+  late Timer _timer;
+  int _seconds = 0;
+  int _minutes = 0;
+  int _hours = 0;
 
-  void setWorkout(String? workout) {
-    selectedWorkout = workout;
+  bool hasWorkout = false;
+  List<String> workouts = [];
+
+  StartWorkoutState() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      _seconds++;
+
+      if (_seconds == 60) {
+        _seconds = 0;
+        _minutes++;
+      }
+
+      if (_minutes == 60) {
+        _minutes = 0;
+        _hours++;
+      }
+
+      notifyListeners();
+    });
+  }
+
+  int get seconds => _seconds;
+  int get minutes => _minutes;
+  int get hours => _hours;
+
+  void addWorkout(String workout) {
+    workouts.add(workout);
     hasWorkout = true;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }
 
@@ -42,7 +76,7 @@ class StartWorkoutScreen extends StatelessWidget {
               final selectWorkout = SelectWorkout();
               String? selectedWorkout = await selectWorkout.show(context);
               if (selectedWorkout != null) {
-                context.read<StartWorkoutState>().setWorkout(selectedWorkout);
+                context.read<StartWorkoutState>().addWorkout(selectedWorkout);
               }
             },
             child: Text('Add Exercise +'),
@@ -54,7 +88,17 @@ class StartWorkoutScreen extends StatelessWidget {
               child,
             ) {
               return workoutState.hasWorkout
-                  ? WorkoutWidget(selectedWorkout: workoutState.selectedWorkout)
+                  ? SizedBox(
+                      height: 500,
+                      child: ListView.builder(
+                        itemCount: workoutState.workouts.length,
+                        itemBuilder: (context, index) {
+                          return WorkoutWidget(
+                            selectedWorkout: workoutState.workouts[index],
+                          );
+                        },
+                      ),
+                    )
                   : Column(
                       children: [
                         SizedBox(height: 16),
@@ -62,6 +106,30 @@ class StartWorkoutScreen extends StatelessWidget {
                       ],
                     );
             },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Consumer<StartWorkoutState>(
+                builder: (context, workoutState, child) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text(
+                      'Exercise time: ${workoutState.hours} h ${workoutState.minutes} min ${workoutState.seconds} s',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 30),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text('Finish'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
