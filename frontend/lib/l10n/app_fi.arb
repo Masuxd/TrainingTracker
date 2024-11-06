@@ -1,0 +1,11 @@
+{
+    "@@locale": "fi",
+    "language": "fi",
+    "@language": {
+        "description": "Nykyinen kieli"
+    },
+    "helloWorld": "Hei maailma!",
+    "@helloWorld": {
+        "description": "Ystävällinen tervehdys"
+    }
+}
