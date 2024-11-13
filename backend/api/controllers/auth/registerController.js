@@ -74,7 +74,7 @@ await newVerification.save();
 
 const link = 'http://localhost:3000/auth/verify/' + verificationID;
 const htmlMessage = `Hello! thanks for signing up! Please click <a href="${link}">here</a> to verify your email.<br>If the link is broken, please copy and paste the following URL into your browser: <br>${link}`;
-sendEmail(email, 'Please verify your email', htmlMessage);
+//sendEmail(email, 'Please verify your email', htmlMessage);
 
 // Create a session for the new user
 req.session.userId = newUser._id;

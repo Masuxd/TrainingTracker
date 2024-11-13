@@ -18,10 +18,38 @@ const port = 3000;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+const allowedWebOrigin = 'http://0.0.0.0:8080';
+
+// Dynamic CORS configuration
+const corsOptions = (req, callback) => {
+  let corsOptions;
+  const origin = req.header('Origin');
+
+  if (origin === allowedWebOrigin) {
+    // Allow requests from the specific web origin
+    corsOptions = { origin: true, credentials: true, exposedHeaders: ['Set-Cookie'] };
+  } else if (!origin || origin.startsWith('http://') || origin.startsWith('https://')) {
+    // Allow requests from any origin (for mobile apps)
+    corsOptions = { origin: true, credentials: true, exposedHeaders: ['Set-Cookie'] };
+  } else {
+    // Disallow other origins
+    corsOptions = { origin: false };
+  }
+
+  callback(null, corsOptions);
+};
+
+// Use the dynamic CORS configuration
+app.use(cors(corsOptions));
+
+
+/*
 app.use(cors({
-  origin: 'http://localhost:8080',
+  origin: 'http://0.0.0.0:8080',
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
+*/
 
 const mongoUrl = 'mongodb://root:example@mongodb:27017/exampledb?authSource=admin';
 
@@ -29,10 +57,10 @@ const mongoUrl = 'mongodb://root:example@mongodb:27017/exampledb?authSource=admi
 mongoose.connect(mongoUrl, {
   useUnifiedTopology: true,
 })
-  .then(() => {
+  .then(async () => {
     console.log('Connected to MongoDB')
     //destroy all data in the database for testing purposes
-    nukeDatabase();
+    await nukeDatabase();
   })
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
@@ -43,10 +71,7 @@ app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: {
-    secure: isProduction, // Set to true if using HTTPS
-    sameSite: isProduction ? 'None' : 'Lax'
-  }
+  cookie: { secure: true, httpOnly: true, sameSite: 'None' }
 }));
 
 // Add logging middleware
@@ -78,4 +103,32 @@ if (isProduction) {
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });
+}
+
+async function nukeDatabase() {
+  try {
+    const db = mongoose.connection;
+    await db.dropDatabase();
+    console.log('Database dropped successfully');
+    const exercises = [
+      { "name": "Bench Press", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Squat", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Deadlift", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Overhead Press", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Bicep Curl", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Tricep Extension", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Leg Press", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Lat Pulldown", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Seated Row", "weight": true, "distance": false, "duration": false, "speed": false },
+      { "name": "Plank", "weight": false, "distance": false, "duration": true, "speed": false },
+      { "name": "Wall Sit", "weight": false, "distance": false, "duration": true, "speed": false },
+      { "name": "Static Lunge", "weight": false, "distance": false, "duration": true, "speed": false },
+      { "name": "Isometric Hold", "weight": false, "distance": false, "duration": true, "speed": false }
+    ];
+    const Exercise = require('./models/exerciseModel');
+    await Exercise.insertMany(exercises);
+    console.log('Exercise data inserted successfully');
+  } catch (error) {
+    console.error('Error initializing database:', error);
+  }
 }

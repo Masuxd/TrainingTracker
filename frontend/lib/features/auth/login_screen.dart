@@ -5,17 +5,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/features/home/home_screen.dart';
 
 import './mock_users.dart';
-import './services/auth_service.dart';
+import '../api/auth/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
+  final String loginUrl = 'https://localhost:3000/auth/login';
+  final String registerUrl = 'https://localhost:3000/auth/register';
+  final String logoutUrl = 'https://localhost:3000/auth/logout';
+
   Future<String?> _loginUser(LoginData data) async {
-    AuthService authService = AuthService();
-    bool success = await authService.login(data.name, data.password);
-    if (!success) {
+    bool loginSuccess = await login(loginUrl, {
+      'username': data.name,
+      'password': data.password,
+    });
+    if (!loginSuccess) {
       return "Invalid username or password";
     }
     return null;
@@ -31,11 +37,12 @@ class LoginScreen extends StatelessWidget {
       if (data.name == null || email == null || data.password == null) {
         return "All fields are required";
       }
-
-      AuthService authService = AuthService();
-      bool success =
-          await authService.register(data.name!, email, data.password!);
-      if (!success) {
+      bool registerSuccess = await register(registerUrl, {
+        'username': data.name,
+        'email': email,
+        'password': data.password,
+      });
+      if (!registerSuccess) {
         return "Registration failed";
       }
 
