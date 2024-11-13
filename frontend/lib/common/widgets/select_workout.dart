@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../mockExercises.dart';
+import '../models/exercise.dart';
 
 class SelectWorkout extends StatefulWidget {
-  //final List<String> options = mockExercises.keys.toList();
-  //const SelectWorkout({super.key});
-
   @override
   State<StatefulWidget> createState() => _SelectWorkoutState();
 
@@ -25,7 +23,7 @@ class _SelectWorkoutState extends State<SelectWorkout> {
   @override
   void initState() {
     super.initState();
-    options = mockExercises.keys.toList();
+    options = mockExercises.map((exercise) => exercise.name).toList();
     filteredOptions = List.from(options);
     searchController.addListener(_onSearchChanged);
   }

@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
+import './common/models/exercise.dart';
+import 'mockExercises.dart';
 import 'dart:async';
 
 class StartWorkout extends StatelessWidget {
@@ -27,7 +29,7 @@ class StartWorkoutState extends ChangeNotifier {
   int _hours = 0;
 
   bool hasWorkout = false;
-  List<String> workouts = [];
+  List<Exercise> workouts = [];
 
   StartWorkoutState() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
@@ -51,7 +53,7 @@ class StartWorkoutState extends ChangeNotifier {
   int get minutes => _minutes;
   int get hours => _hours;
 
-  void addWorkout(String workout) {
+  void addWorkout(Exercise workout) {
     workouts.add(workout);
     hasWorkout = true;
     notifyListeners();
@@ -76,7 +78,9 @@ class StartWorkoutScreen extends StatelessWidget {
               final selectWorkout = SelectWorkout();
               String? selectedWorkout = await selectWorkout.show(context);
               if (selectedWorkout != null) {
-                context.read<StartWorkoutState>().addWorkout(selectedWorkout);
+                Exercise selectedExercise = mockExercises
+                    .firstWhere((exercise) => exercise.name == selectedWorkout);
+                context.read<StartWorkoutState>().addWorkout(selectedExercise);
               }
             },
             child: Text('Add Exercise +'),
@@ -94,7 +98,7 @@ class StartWorkoutScreen extends StatelessWidget {
                         itemCount: workoutState.workouts.length,
                         itemBuilder: (context, index) {
                           return WorkoutWidget(
-                            selectedWorkout: workoutState.workouts[index],
+                            selectedExercise: workoutState.workouts[index],
                           );
                         },
                       ),

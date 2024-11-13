@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../mockExercises.dart';
+import '../models/exercise.dart';
 
 class WorkoutWidget extends StatefulWidget {
-  final String? selectedWorkout;
-  WorkoutWidget({required this.selectedWorkout});
+  final Exercise selectedExercise;
+  WorkoutWidget({required this.selectedExercise});
 
   @override
   _WorkoutWidgetState createState() => _WorkoutWidgetState();
@@ -16,7 +18,7 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
         padding: const EdgeInsets.all(16.0),
         child: ExpansionTile(
           initiallyExpanded: true,
-          title: Text(widget.selectedWorkout ?? 'No workout selected'),
+          title: Text(widget.selectedExercise.name),
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -24,7 +26,7 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Set(),
+                    Set(selectedExercise: widget.selectedExercise),
                     SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,6 +60,9 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
 }
 
 class Set extends StatelessWidget {
+  final Exercise selectedExercise;
+  Set({required this.selectedExercise});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,29 +74,52 @@ class Set extends StatelessWidget {
           ],
         ),
         SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'Weight: (kg)',
-                  border: OutlineInputBorder(),
+        if (selectedExercise.isWeight)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Weight: (kg)',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                 ),
+                SizedBox(width: 15),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Reps: (s)',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (selectedExercise.isDistance)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Distance: (km)',
+                border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(width: 15),
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'Reps: (s)',
-                  border: OutlineInputBorder(),
-                ),
+          ),
+        if (selectedExercise.isTime)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Time: (s)',
+                border: OutlineInputBorder(),
               ),
             ),
-          ],
-        ),
-        SizedBox(height: 15),
+          ),
         TextField(
           decoration: InputDecoration(
             labelText: 'Enter Rest Time',
