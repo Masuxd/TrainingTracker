@@ -1,4 +1,4 @@
-import './common/models/exercise.dart';
+import '../common/models/exercise.dart';
 
 // 'Name', 'Weight', 'Distance', 'Time'
 
