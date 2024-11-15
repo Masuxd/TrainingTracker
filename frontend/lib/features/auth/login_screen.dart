@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/features/home/home_screen.dart';
 
 import './mock_users.dart';
-import '../api/auth/auth_service.dart';
+import '../api/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
           'Signup info at client: ${data.name} ${data.email} ${data.password}');
 
       String? email = data.email;
-      if (data.name == null || email == null || data.password == null) {
+      if (data.name == null || data.password == null) {
         return "All fields are required";
       }
       bool registerSuccess = await register(registerUrl, {

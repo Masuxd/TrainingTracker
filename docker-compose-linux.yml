@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-linux
+    ports:
+      - "8080:80"
+    depends_on:
+      - mongodb
+      - api
+
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - ./backend/data:/data/db
+      - ./backend/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+
+  api:
+    build:
+      context: ./backend/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      ADB_SERVER_SOCKET: tcp:host.docker.internal:5037

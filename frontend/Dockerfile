@@ -2,7 +2,12 @@
 FROM ghcr.io/cirruslabs/flutter:3.24.3
 
 # Install necessary dependencies for running Flutter on web
-RUN apt update
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    xz-utils \
+    libglu1-mesa \
+    && apt-get clean
 
 # Enable web support
 RUN flutter config --enable-web
