@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../mockExercises.dart';
+import 'package:frontend/start_workout.dart';
+import 'package:provider/provider.dart';
 import '../models/exercise.dart';
+import 'package:uuid/uuid.dart';
+import '../models/set.dart' as model;
 
 class WorkoutWidget extends StatefulWidget {
   final Exercise selectedExercise;
-  WorkoutWidget({required this.selectedExercise});
+  final String widgetId;
+  final VoidCallback onDelete;
+
+  WorkoutWidget(
+      {required this.selectedExercise,
+      required this.widgetId,
+      required this.onDelete});
 
   @override
   _WorkoutWidgetState createState() => _WorkoutWidgetState();
@@ -12,10 +21,24 @@ class WorkoutWidget extends StatefulWidget {
 
 class _WorkoutWidgetState extends State<WorkoutWidget> {
   @override
+  void initState() {
+    final session = context.read<StartWorkoutState>().session!;
+    super.initState();
+    debugPrint('Widget ID workout: ${widget.widgetId}');
+    debugPrint('Set ID workout: ${session.sets.last.setId}');
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final session = context.read<StartWorkoutState>().session!;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(
+          top: 16.0,
+          bottom: 16.0,
+          left: 30.0,
+          right: 30.0,
+        ),
         child: ExpansionTile(
           initiallyExpanded: true,
           title: Text(widget.selectedExercise.name),
@@ -26,25 +49,87 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Set(selectedExercise: widget.selectedExercise),
+                    for (var set in session.sets)
+                      if (set.exercise.name == widget.selectedExercise.name &&
+                          set.widgetId == widget.widgetId)
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text('Set: ${set.setId}'),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            Set(selectedExercise: widget.selectedExercise),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  if (session.sets
+                                          .where((set) =>
+                                              widget.widgetId == set.widgetId)
+                                          .length >
+                                      1)
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        session.sets.removeWhere((element) =>
+                                            element.setId == set.setId);
+
+                                        debugPrint(
+                                            'List length: ${session.sets.length}');
+                                        for (var set in session.sets) {
+                                          debugPrint(
+                                              'Set ID: ${set.setId}, Exercise: ${set.exercise.name}');
+                                        }
+                                      },
+                                      child: Text('Delete Set'),
+                                    )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ElevatedButton(
+                      onPressed: () {
+                        session.sets.add(model.Set(
+                          setId: Uuid().v4(),
+                          exercise: widget.selectedExercise,
+                          rep: [],
+                          widgetId: widget.widgetId,
+                        ));
+                        debugPrint('List length: ${session.sets.length}');
+                        for (var set in session.sets) {
+                          debugPrint(
+                              'Set ID: ${set.setId}, Exercise: ${set.exercise.name}');
+                          debugPrint('Widget ID: ${widget.widgetId}');
+                          debugPrint('Session sets: ${session.sets.length}');
+                        }
+                      },
+                      child: Text('Add Set +'),
+                    ),
                     SizedBox(height: 16),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            // Handle Save action
+                            session.sets.removeWhere((set) =>
+                                set.exercise.name ==
+                                    widget.selectedExercise.name &&
+                                set.setId == widget.widgetId);
+
+                            debugPrint('List length: ${session.sets.length}');
+                            for (var set in session.sets) {
+                              debugPrint(
+                                  'Widget ID: ${widget.widgetId}, Set ID: ${set.setId}, Exercise: ${set.exercise.name}');
+                            }
+                            widget.onDelete();
                           },
-                          child: Text('Save'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Handle Cancel action
-                          },
-                          child: Text('Cancel'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                           ),
+                          child: Text('Delete Exercise'),
                         ),
                       ],
                     ),
@@ -65,69 +150,60 @@ class Set extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          children: [
-            Text('Set:'),
-          ],
-        ),
-        SizedBox(height: 15),
-        if (selectedExercise.isWeight)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Weight: (kg)',
-                      border: OutlineInputBorder(),
-                    ),
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      if (selectedExercise.isWeight)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Weight: (kg)',
+                    border: OutlineInputBorder(),
                   ),
                 ),
-                SizedBox(width: 15),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Reps: (s)',
-                      border: OutlineInputBorder(),
-                    ),
+              ),
+              SizedBox(width: 15),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Reps: (s)',
+                    border: OutlineInputBorder(),
                   ),
                 ),
-              ],
-            ),
-          ),
-        if (selectedExercise.isDistance)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Distance: (km)',
-                border: OutlineInputBorder(),
               ),
-            ),
+            ],
           ),
-        if (selectedExercise.isTime)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Time: (s)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Enter Rest Time',
-            border: OutlineInputBorder(),
-          ),
-          keyboardType: TextInputType.number,
         ),
-      ],
-    );
+      if (selectedExercise.isDistance)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: 'Distance: (km)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+      if (selectedExercise.isTime)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: 'Time: (s)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+      TextField(
+        decoration: InputDecoration(
+          labelText: 'Enter Rest Time',
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: TextInputType.number,
+      ),
+    ]);
   }
 }

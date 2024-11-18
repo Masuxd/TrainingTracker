@@ -4,8 +4,12 @@ import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
 import './common/models/exercise.dart';
-import 'mockExercises.dart';
+import 'mock_data/mock_exercises.dart';
+import './common/models/training_session.dart';
+import '../mock_data/mock_users.dart';
 import 'dart:async';
+import 'package:uuid/uuid.dart';
+import 'common/models/set.dart' as model;
 
 class StartWorkout extends StatelessWidget {
   const StartWorkout({super.key});
@@ -30,6 +34,19 @@ class StartWorkoutState extends ChangeNotifier {
 
   bool hasWorkout = false;
   List<Exercise> workouts = [];
+  TrainingSession? session;
+
+  void startSession() {
+    final mockUser = mockUsers[0];
+    final sessionId = Uuid().v4();
+    session = TrainingSession(
+      sessionId: sessionId,
+      userId: mockUser.id,
+      startTime: DateTime.now(),
+      endTime: null,
+      sets: [],
+    );
+  }
 
   StartWorkoutState() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
@@ -47,6 +64,8 @@ class StartWorkoutState extends ChangeNotifier {
 
       notifyListeners();
     });
+
+    startSession();
   }
 
   int get seconds => _seconds;
@@ -56,6 +75,20 @@ class StartWorkoutState extends ChangeNotifier {
   void addWorkout(Exercise workout) {
     workouts.add(workout);
     hasWorkout = true;
+    session?.sets.add(model.Set(
+      setId: Uuid().v4(),
+      exercise: workout,
+      rep: [],
+      widgetId: Uuid().v4(),
+    ));
+    debugPrint('Widget ID start: ${session!.sets.last.widgetId}');
+    debugPrint('Set ID start: ${session!.sets.last.setId}');
+    debugPrint('Adding workout: ${workout.name}');
+    notifyListeners();
+  }
+
+  void removeWorkout(int index) {
+    workouts.removeAt(index);
     notifyListeners();
   }
 
@@ -98,8 +131,14 @@ class StartWorkoutScreen extends StatelessWidget {
                         itemCount: workoutState.workouts.length,
                         itemBuilder: (context, index) {
                           return WorkoutWidget(
-                            selectedExercise: workoutState.workouts[index],
-                          );
+                              selectedExercise: workoutState.workouts[index],
+                              widgetId:
+                                  workoutState.session!.sets[index].widgetId,
+                              onDelete: () {
+                                context
+                                    .read<StartWorkoutState>()
+                                    .removeWorkout(index);
+                              });
                         },
                       ),
                     )

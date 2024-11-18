@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../mockExercises.dart';
-import '../models/exercise.dart';
+import '../../mock_data/mock_exercises.dart';
 
 class SelectWorkout extends StatefulWidget {
   @override
