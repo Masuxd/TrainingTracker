@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
 import './common/models/exercise.dart';
-import 'mockExercises.dart';
+import 'mock_data/mock_exercises.dart';
 import 'dart:async';
 
 class PlanWorkout extends StatelessWidget {
@@ -99,6 +100,8 @@ class PlanWorkoutScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return WorkoutWidget(
                             selectedExercise: workoutState.workouts[index],
+                            widgetId: Uuid().v4(),
+                            onDelete: () {},
                           );
                         },
                       ),
