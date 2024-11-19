@@ -5,19 +5,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/features/home/home_screen.dart';
 
 import './mock_users.dart';
-import '../api/auth_service.dart';
+import '../../common/services/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
-  final String loginUrl = 'https://localhost:3000/auth/login';
-  final String registerUrl = 'https://localhost:3000/auth/register';
-  final String logoutUrl = 'https://localhost:3000/auth/logout';
-
   Future<String?> _loginUser(LoginData data) async {
-    bool loginSuccess = await login(loginUrl, {
+    bool loginSuccess = await login({
       'username': data.name,
       'password': data.password,
     });
@@ -37,7 +33,7 @@ class LoginScreen extends StatelessWidget {
       if (data.name == null || data.password == null) {
         return "All fields are required";
       }
-      bool registerSuccess = await register(registerUrl, {
+      bool registerSuccess = await register({
         'username': data.name,
         'email': email,
         'password': data.password,

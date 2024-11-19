@@ -7,7 +7,7 @@ const { authenticateSession } = require('../middleware/sessionMiddleware');
 router.use(authenticateSession);
 
 router.get('/:id', trainingSessionController.getTrainingSessionById);
-router.get('/user/sessions', trainingSessionController.getTrainingSessionsByUserId);
+router.get('/list', trainingSessionController.getTrainingSessionsByUserId);
 router.post('/save', trainingSessionController.saveTrainingSession);
 
 module.exports = router;

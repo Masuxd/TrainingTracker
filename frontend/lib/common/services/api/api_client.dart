@@ -3,7 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'cookie_storage.dart';
-import 'package:flutter/material.dart';
+
+String baseUrl = 'https://localhost:3000';
 
 /// Function to make requests using Dio with automatic cookie handling
 Future<Response?> request(
@@ -16,9 +17,10 @@ Future<Response?> request(
   final secureStorage = FlutterSecureStorage();
   final cookieJar = CookieStorage(secureStorage: secureStorage);
   dio.interceptors.add(CookieManager(cookieJar));
-  debugPrint('CookieJar: $cookieJar');
   try {
     Response response;
+    // Construct the full URL
+    url = '$baseUrl/$url';
 
     // Handle the request based on the HTTP method
     if (method == 'POST') {
