@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
 
-class TrainingProfile extends StatelessWidget {
-  const TrainingProfile({super.key});
+class ProfileScreenWrapper extends StatelessWidget {
+  const ProfileScreenWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => ProfileScreenState(),
       child: MainLayout(
-        currentIndex: 1,
+        currentIndex: 2,
         child: ProfileScreen(),
       ),
     );
