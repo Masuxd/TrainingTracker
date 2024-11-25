@@ -36,13 +36,14 @@ class CalendarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final calendarState = Provider.of<CalendarScreenState>(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Training Calendar'),
+      ),
+      body:
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Text('Training Calendar',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           TableCalendar(
             headerStyle: const HeaderStyle(
                 formatButtonVisible: false, titleCentered: true),
@@ -68,6 +69,13 @@ class CalendarScreen extends StatelessWidget {
           const SizedBox(height: 20),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/add-training');
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
+
