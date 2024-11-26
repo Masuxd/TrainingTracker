@@ -5,6 +5,8 @@ import 'common/widgets/layout_widget.dart';
 import 'theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 
+
+
 class SettingsScreenWrapper extends StatelessWidget {
   const SettingsScreenWrapper({super.key});
 
@@ -24,6 +26,9 @@ class SettingsScreenState extends ChangeNotifier {}
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+
+
 @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -83,7 +88,9 @@ class _SettingsPageState extends State<SettingsScreen> {
                 SizedBox(height: 50),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: (
+
+                    ) {
 
                     },
                     style: ElevatedButton.styleFrom(

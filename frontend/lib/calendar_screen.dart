@@ -71,7 +71,7 @@ class CalendarScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/add-training');
+          Navigator.pushNamed(context, 'start/plan workout'); //lisää treenisivu tähän
         },
         child: const Icon(Icons.add),
       ),
