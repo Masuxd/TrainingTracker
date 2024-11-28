@@ -9,8 +9,9 @@ async function getTrainingSessionById(req, res) {
       return res.status(401).json({ error: 'Unauthorized: No session found' });
     }
 
-    const trainingSession = await TrainingSession.findOne({ _id: id, userId });
+    const trainingSession = await TrainingSession.findOne({ _id: id, user_id: userId });
     if (!trainingSession) {
+      console.log('Training session not found: ${id}');
       return res.status(404).json({ error: 'Training session not found or you do not have access to it' });
     }
     res.json(trainingSession);
@@ -25,17 +26,19 @@ async function getTrainingSessionsByUserId(req, res) {
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized: No session found' });
     }
-
+    console.log('Received request to get training sessions for user ID:', userId);
     const trainingSessions = await TrainingSession.find({ user_id: userId });
+    if (trainingSessions.length === 0) {
+      return res.status(404).json({ error: 'Training sessions not found' });
+    }
     res.json(trainingSessions);
   } catch (error) {
+    console.error('Error fetching training sessions:', error); // Add detailed logging
     res.status(500).json({ error: 'Internal Server Error: session list' });
   }
 }
 
 async function saveTrainingSession(req, res) {
-  console.log('Received request to save training session:');
-  console.log('Request body:', req.body);
   try {
     console.log('Received request to save training session');
     const userId = req.session.userId; // Get user ID from session
@@ -44,11 +47,12 @@ async function saveTrainingSession(req, res) {
       return res.status(401).json({ error: 'Unauthorized: No session found' });
     }
 
-    const { start_time, end_time, finished, set } = req.body;
+    const { start_time, name, end_time, finished, set } = req.body;
     console.log('Request body:', req.body);
 
     const newTrainingSession = new TrainingSession({
       user_id: userId,
+      name: name,
       start_time: start_time,
       end_time: end_time,
       finished: finished,

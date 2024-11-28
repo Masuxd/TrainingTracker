@@ -29,3 +29,7 @@ build/
 .pub/
 
 scripts/
+docker-compose-linux-android.yml
+frontend/Dockerfile-linux-android
+start.sh
+frontend/Dockerfile-linux

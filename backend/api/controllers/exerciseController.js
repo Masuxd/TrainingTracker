@@ -5,7 +5,7 @@ async function getAllExercises(req, res) {
     const exercises = await Exercise.find();
     res.json(exercises);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error: get exercise-list' });
+    return res.status(500).json({ error: 'Internal Server Error: get exercise-list' });
   }
 }
 
@@ -18,13 +18,13 @@ async function getExerciseById(req, res) {
     }
     res.json(exercise);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error: get exercise by ID' });
+    return res.status(500).json({ error: 'Internal Server Error: get exercise by ID' });
   }
 }
 
 async function searchExercises(req, res) {
   try {
-    const { query } = req.query;
+    const { query } = req.params;
     if (!query) {
       return res.status(400).json({ error: 'Query parameter is required' });
     }
@@ -38,7 +38,7 @@ async function searchExercises(req, res) {
     });
     res.json(exercises);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error: search exercise' });
+    return res.status(500).json({ error: 'Internal Server Error: search exercise' });
   }
 }
 
