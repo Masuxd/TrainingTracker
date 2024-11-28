@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const login = async (req, res) => {
   console.log('Request body:', req.body);
-  const { username: email, password } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ email });
   const hashedPassword = await bcrypt.hash(password, 10);
 

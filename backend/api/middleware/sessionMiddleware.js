@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 
 async function authenticateSession(req, res, next) {
+  console.log('Authenticating session');
   if (!req.session.userId) {
     return res.sendStatus(401);
   }
@@ -11,6 +12,7 @@ async function authenticateSession(req, res, next) {
   }
 
   req.user = user;
+  console.log('Session authenticated: ${user}  ${req.session}');
   next();
 }
 

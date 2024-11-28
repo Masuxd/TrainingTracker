@@ -1,4 +1,3 @@
-// auth_service.dart
 import 'package:flutter/material.dart';
 import 'package:frontend/common/services/exercise_service.dart';
 
@@ -15,10 +14,12 @@ Future<bool> login(Map<String, dynamic> credentials) async {
     print("Login successful");
     TrainingSession treeni = generateTrainingSession();
     await postTrainingSession(treeni);
+    /*
     TrainingSession treenihaku =
         (await fetchTrainingSession("673c8432119e00a5f8fdf3c8"))
             as TrainingSession;
     debugPrint(treenihaku.startTime.toString());
+    */
     List<TrainingSession> treenit =
         (await fetchTrainingSessionList()) as List<TrainingSession>;
     debugPrint(treenit[0].startTime.toString());
@@ -38,7 +39,7 @@ Future<bool> register(Map<String, dynamic> registrationData) async {
     print("Registration successful");
     // Automatically login after registration
     return await login({
-      'username': registrationData['email'],
+      'email': registrationData['email'],
       'password': registrationData['password'],
     });
   }

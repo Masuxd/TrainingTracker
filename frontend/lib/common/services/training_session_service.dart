@@ -59,6 +59,7 @@ Future<List<TrainingSession>?> fetchTrainingSessionList() async {
 
 TrainingSession generateTrainingSession() {
   return TrainingSession(
+    name: "Test session",
     startTime: DateTime.parse("2023-10-01T10:00:00Z"),
     endTime: DateTime.parse("2023-10-01T11:00:00Z"),
     finished: true,

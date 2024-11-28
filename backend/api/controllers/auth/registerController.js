@@ -14,8 +14,7 @@ try {
       return res.status(400).send('Bad Request: Request body is undefined');
     }
 
-const { username, password } = req.body;
-const email = req.body.email;
+const { email, username, password } = req.body;
 
 // Check that email has @ and .
 const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;

@@ -128,6 +128,37 @@ async function nukeDatabase() {
     const Exercise = require('./models/exerciseModel');
     await Exercise.insertMany(exercises);
     console.log('Exercise data inserted successfully');
+
+      try {
+        const bcrypt = require('bcrypt');
+        const User = require('./models/userModel');
+        const testUsername = 'test';
+        const testEmail = 'test@test.com';
+        const testPassword = 'test123';
+    
+        // Check if the test user already exists
+        const existingUser = await User.findOne({ email: testEmail });
+        if (existingUser) {
+          console.log('Test user already exists');
+          return;
+        }
+    
+        // Hash the test user's password
+        const hashedTestPassword = await bcrypt.hash(testPassword, 10);
+    
+        // Create the test user
+        const testUser = new User({
+          username: testUsername,
+          email: testEmail,
+          password: hashedTestPassword,
+        });
+    
+        // Save the test user to the database
+        await testUser.save();
+        console.log('Test user created successfully');
+      } catch (error) {
+        console.error('Error creating test user:', error);
+      }
   } catch (error) {
     console.error('Error initializing database:', error);
   }
