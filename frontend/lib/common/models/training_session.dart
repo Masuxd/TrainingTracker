@@ -1,5 +1,4 @@
 import 'set.dart';
-//import 'user.dart';
 
 class TrainingSession {
   final String sessionId;

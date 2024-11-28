@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../common/widgets/layout_widget.dart';
-import '../../common/widgets/workout_widget.dart';
 
 class TrainingTracker extends StatelessWidget {
   const TrainingTracker({super.key});
