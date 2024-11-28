@@ -16,16 +16,16 @@ class WorkoutWidget extends StatefulWidget {
       required this.onDelete});
 
   @override
-  _WorkoutWidgetState createState() => _WorkoutWidgetState();
+  WorkoutWidgetState createState() => WorkoutWidgetState();
 }
 
-class _WorkoutWidgetState extends State<WorkoutWidget> {
+class WorkoutWidgetState extends State<WorkoutWidget> {
   @override
   void initState() {
-    final session = context.read<StartWorkoutState>().session!;
+    //final session = context.read<StartWorkoutState>().session!;
     super.initState();
-    debugPrint('Widget ID workout: ${widget.widgetId}');
-    debugPrint('Set ID workout: ${session.sets.last.setId}');
+    //debugPrint('Widget ID workout: ${widget.widgetId}');
+    //debugPrint('Set ID workout: ${session.sets.last.setId}');
   }
 
   @override
@@ -56,7 +56,7 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
                           children: [
                             Row(
                               children: [
-                                Text('Set: ${set.setId}'),
+                                Text('Set:'),
                               ],
                             ),
                             SizedBox(height: 15),
@@ -76,12 +76,12 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
                                         session.sets.removeWhere((element) =>
                                             element.setId == set.setId);
 
-                                        debugPrint(
+                                        /*debugPrint(
                                             'List length: ${session.sets.length}');
                                         for (var set in session.sets) {
                                           debugPrint(
                                               'Set ID: ${set.setId}, Exercise: ${set.exercise.name}');
-                                        }
+                                        }*/
                                       },
                                       child: Text('Delete Set'),
                                     )
@@ -98,13 +98,12 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
                           rep: [],
                           widgetId: widget.widgetId,
                         ));
-                        debugPrint('List length: ${session.sets.length}');
-                        for (var set in session.sets) {
-                          debugPrint(
-                              'Set ID: ${set.setId}, Exercise: ${set.exercise.name}');
-                          debugPrint('Widget ID: ${widget.widgetId}');
-                          debugPrint('Session sets: ${session.sets.length}');
-                        }
+                        //debugPrint('New Set Added:');
+                        //debugPrint('Set ID: ${session.sets.last.setId}');
+                        //debugPrint('Widget ID: ${widget.widgetId}');
+                        //debugPrint(
+                        //  'Session Sets Length: ${session.sets.length}');
+                        setState(() {});
                       },
                       child: Text('Add Set +'),
                     ),
@@ -117,13 +116,13 @@ class _WorkoutWidgetState extends State<WorkoutWidget> {
                             session.sets.removeWhere((set) =>
                                 set.exercise.name ==
                                     widget.selectedExercise.name &&
-                                set.setId == widget.widgetId);
+                                set.widgetId == widget.widgetId);
 
-                            debugPrint('List length: ${session.sets.length}');
+                            /*debugPrint('List length: ${session.sets.length}');
                             for (var set in session.sets) {
                               debugPrint(
                                   'Widget ID: ${widget.widgetId}, Set ID: ${set.setId}, Exercise: ${set.exercise.name}');
-                            }
+                            }*/
                             widget.onDelete();
                           },
                           style: ElevatedButton.styleFrom(

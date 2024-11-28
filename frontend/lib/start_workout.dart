@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
@@ -10,6 +12,7 @@ import '../mock_data/mock_users.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
 import 'common/models/set.dart' as model;
+import 'package:http/http.dart' as http;
 
 class StartWorkout extends StatelessWidget {
   const StartWorkout({super.key});
@@ -33,7 +36,7 @@ class StartWorkoutState extends ChangeNotifier {
   int _hours = 0;
 
   bool hasWorkout = false;
-  List<Exercise> workouts = [];
+  List<Map<String, dynamic>> workouts = [];
   TrainingSession? session;
 
   void startSession() {
@@ -73,23 +76,75 @@ class StartWorkoutState extends ChangeNotifier {
   int get hours => _hours;
 
   void addWorkout(Exercise workout) {
-    workouts.add(workout);
     hasWorkout = true;
-    session?.sets.add(model.Set(
+
+    final widgetId = Uuid().v4();
+    workouts.add({
+      'workout': workout,
+      'widgetId': widgetId,
+    });
+
+    final newSet = model.Set(
       setId: Uuid().v4(),
       exercise: workout,
       rep: [],
-      widgetId: Uuid().v4(),
-    ));
-    debugPrint('Widget ID start: ${session!.sets.last.widgetId}');
-    debugPrint('Set ID start: ${session!.sets.last.setId}');
-    debugPrint('Adding workout: ${workout.name}');
+      widgetId: widgetId,
+    );
+
+    session?.sets.add(newSet);
+
+    //debugPrint('Adding new workout: ${workout.name}');
+    //debugPrint('Widget ID: ${newSet.widgetId}, Set ID: ${newSet.setId}');
     notifyListeners();
   }
 
   void removeWorkout(int index) {
     workouts.removeAt(index);
     notifyListeners();
+  }
+
+  Future<void> saveSession() async {
+    if (session == null) {
+      print("No active session to save.");
+      return;
+    }
+
+    session?.endTime = DateTime.now();
+
+    /*final url = Uri.parse('http://localhost:3000/sessions');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer <your-session-token>'
+    };*/
+
+    final body = {
+      "start_time": session!.startTime.toIso8601String(),
+      "end_time": session!.endTime!.toIso8601String(),
+      "finished": true,
+      "set": session!.sets
+          .map((set) => {
+                "exercise": set.exercise.name,
+                "reps": set.rep,
+              })
+          .toList(),
+    };
+
+    //final body = session!.toJson();
+    debugPrint('Session start time: ${body['start_time']}');
+    debugPrint('Session end time: ${body['end_time']}');
+    debugPrint('Session sets: ${body['set']}');
+
+    /*try {
+      final response =
+          await http.post(url, headers: headers, body: jsonEncode(body));
+      if (response.statusCode == 201) {
+        print("Session saved successfully.");
+      } else {
+        print("Failed to save session. Status code: ${response.body}");
+      }
+    } catch (error) {
+      print("Failed to save session. Error: $error");
+    }*/
   }
 
   @override
@@ -130,15 +185,16 @@ class StartWorkoutScreen extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: workoutState.workouts.length,
                         itemBuilder: (context, index) {
+                          final workout = workoutState.workouts[index];
                           return WorkoutWidget(
-                              selectedExercise: workoutState.workouts[index],
-                              widgetId:
-                                  workoutState.session!.sets[index].widgetId,
-                              onDelete: () {
-                                context
-                                    .read<StartWorkoutState>()
-                                    .removeWorkout(index);
-                              });
+                            selectedExercise: workout['workout'] as Exercise,
+                            widgetId: workout['widgetId'],
+                            onDelete: () {
+                              context
+                                  .read<StartWorkoutState>()
+                                  .removeWorkout(index);
+                            },
+                          );
                         },
                       ),
                     )
@@ -168,7 +224,7 @@ class StartWorkoutScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: context.read<StartWorkoutState>().saveSession,
                   child: Text('Finish'),
                 ),
               ),
