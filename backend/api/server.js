@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 const cors = require('cors');
 const fs = require('fs');
 const https = require('https');
@@ -14,22 +15,18 @@ require('dotenv').config();
 
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NODE_ENV === 'development';
 
-const allowedWebOrigin = 'http://0.0.0.0:8080';
 
 // Dynamic CORS configuration
 const corsOptions = (req, callback) => {
   let corsOptions;
   const origin = req.header('Origin');
 
-  if (origin === allowedWebOrigin) {
-    // Allow requests from the specific web origin
-    corsOptions = { origin: true, credentials: true, exposedHeaders: ['Set-Cookie'] };
-  } else if (!origin || origin.startsWith('http://') || origin.startsWith('https://')) {
-    // Allow requests from any origin (for mobile apps)
+  if (origin && origin.startsWith('https://')) {
+    // Allow requests only from HTTPS origins
     corsOptions = { origin: true, credentials: true, exposedHeaders: ['Set-Cookie'] };
   } else {
     // Disallow other origins
@@ -43,24 +40,16 @@ const corsOptions = (req, callback) => {
 app.use(cors(corsOptions));
 
 
-/*
-app.use(cors({
-  origin: 'http://0.0.0.0:8080',
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
-}));
-*/
-
-const mongoUrl = 'mongodb://root:example@mongodb:27017/exampledb?authSource=admin';
+const mongoURI = process.env.MONGO_URI;
 
 // connect to the database
-mongoose.connect(mongoUrl, {
-  useUnifiedTopology: true,
-})
+mongoose.connect(mongoURI)
   .then(async () => {
     console.log('Connected to MongoDB')
     //destroy all data in the database for testing purposes
-    await nukeDatabase();
+    if(isDevelopment) {
+      await setupDevDatabase();
+    }
   })
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
@@ -68,9 +57,13 @@ app.use(express.json());
 
 // Session middleware
 app.use(session({
-  secret: 'your-secret-key',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: mongoURI,
+    collectionName: 'sessions'
+  }),
   cookie: { secure: true, httpOnly: true, sameSite: 'None' }
 }));
 
@@ -90,7 +83,7 @@ app.use('/trainingPlan', trainingPlanRoutes);
 app.use('/trainingSession', trainingSessionRoutes);
 
 
-if (isProduction) {
+if (isDevelopment) {
   const options = {
     key: fs.readFileSync('./https-dev/server.key'),
     cert: fs.readFileSync('./https-dev/server.cert')
@@ -105,7 +98,14 @@ if (isProduction) {
   });
 }
 
-async function nukeDatabase() {
+
+/*
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+*/
+
+async function setupDevDatabase() {
   try {
     const db = mongoose.connection;
     await db.dropDatabase();
