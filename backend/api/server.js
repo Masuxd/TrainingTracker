@@ -43,7 +43,13 @@ app.use(cors(corsOptions));
 const mongoURI = process.env.MONGO_URI;
 
 // connect to the database
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI, {
+  serverApi: {
+    version: '1',
+    strict: true,
+    deprecationErrors: true,
+  }
+})
   .then(async () => {
     console.log('Connected to MongoDB')
     //destroy all data in the database for testing purposes
