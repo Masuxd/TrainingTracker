@@ -57,22 +57,26 @@ mongoose.connect(mongoURI, {
     if(isDevelopment || process.env.RESET_DB === 'true') {
       await setupDevDatabase();
     }
+    initializeSessionMiddleware();
   })
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
 app.use(express.json());
 
-// Session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  store: MongoStore.create({
-    mongoUrl: mongoURI,
-    collectionName: 'sessions'
-  }),
-  cookie: { secure: true, httpOnly: true, sameSite: 'None' }
-}));
+// Function to initialize session middleware
+function initializeSessionMiddleware() {
+  app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: mongoURI,
+      collectionName: 'sessions'
+    }),
+    cookie: { secure: true, httpOnly: true, sameSite: 'None' }
+  }));
+  console.log('Session middleware initialized');
+}
 
 // Add logging middleware
 app.use((req, res, next) => {
