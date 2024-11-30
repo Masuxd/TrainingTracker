@@ -57,14 +57,15 @@ mongoose.connect(mongoURI, {
     if(isDevelopment || process.env.RESET_DB === 'true') {
       await setupDevDatabase();
     }
-    initializeSessionMiddleware();
+    await initializeSessionMiddleware();
+    await setRoutes();
   })
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
 app.use(express.json());
 
 // Function to initialize session middleware
-function initializeSessionMiddleware() {
+async function initializeSessionMiddleware() {
   app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -87,11 +88,14 @@ app.use((req, res, next) => {
 
 
 // set routes
-app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.use('/exercise', exerciseRoutes);
-app.use('/trainingPlan', trainingPlanRoutes);
-app.use('/trainingSession', trainingSessionRoutes);
+async function setRoutes() {
+  app.use('/auth', authRoutes);
+  app.use('/user', userRoutes);
+  app.use('/exercise', exerciseRoutes);
+  app.use('/trainingPlan', trainingPlanRoutes);
+  app.use('/trainingSession', trainingSessionRoutes);
+}
+
 
 
 if (isDevelopment) {
