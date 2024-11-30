@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 //authorize user
 async function authenticateSession(req, res, next) {
   console.log('Authenticating session');
+  console.log('Session:', req.session);
   if (!req.session.userId) {
     console.log('Session not authenticated');
     return res.sendStatus(401);

@@ -24,6 +24,7 @@ const login = async (req, res) => {
   }
 
   req.session.userId = user._id;
+  console.log('Session authenticated:', user, req.session);
   res.sendStatus(200);
 };
 
