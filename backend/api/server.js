@@ -53,7 +53,7 @@ mongoose.connect(mongoURI, {
   .then(async () => {
     console.log('Connected to MongoDB')
     //destroy all data in the database for testing purposes
-    if(isDevelopment) {
+    if(isDevelopment || process.env.RESET_DB === 'true') {
       await setupDevDatabase();
     }
   })
@@ -139,7 +139,7 @@ async function setupDevDatabase() {
         const bcrypt = require('bcrypt');
         const User = require('./models/userModel');
         const testUsername = 'test';
-        const testEmail = 'test@test.com';
+        const testEmail = 'test@test.local';
         const testPassword = 'test123';
     
         // Check if the test user already exists
