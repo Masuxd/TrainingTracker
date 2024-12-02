@@ -4,9 +4,12 @@ import 'package:uuid/uuid.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
+import 'common/models/training_session.dart';
 import './common/models/exercise.dart';
 import 'mock_data/mock_exercises.dart';
+import 'mock_data/mock_users.dart';
 import 'dart:async';
+import 'common/models/set.dart' as model;
 
 class PlanWorkout extends StatelessWidget {
   const PlanWorkout({super.key});
@@ -24,46 +27,76 @@ class PlanWorkout extends StatelessWidget {
 }
 
 class PlanWorkoutState extends ChangeNotifier {
-  late Timer _timer;
-  int _seconds = 0;
-  int _minutes = 0;
-  int _hours = 0;
-
   bool hasWorkout = false;
-  List<Exercise> workouts = [];
+  List<Map<String, dynamic>> workouts = [];
+  TrainingSession? session;
 
-  PlanWorkoutState() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      _seconds++;
-
-      if (_seconds == 60) {
-        _seconds = 0;
-        _minutes++;
-      }
-
-      if (_minutes == 60) {
-        _minutes = 0;
-        _hours++;
-      }
-
-      notifyListeners();
-    });
+  void createPlan() {
+    final mockUser = mockUsers[0];
+    final sessionId = Uuid().v4();
+    session = TrainingSession(
+      sessionId: sessionId,
+      userId: mockUser.id,
+      startTime: null,
+      endTime: null,
+      sets: [],
+    );
   }
 
-  int get seconds => _seconds;
-  int get minutes => _minutes;
-  int get hours => _hours;
-
   void addWorkout(Exercise workout) {
-    workouts.add(workout);
+    if (session == null) {
+      createPlan();
+    }
+
     hasWorkout = true;
+
+    final widgetId = Uuid().v4();
+    workouts.add({
+      'workout': workout,
+      'widgetId': widgetId,
+    });
+
+    final newSet = model.Set(
+      setId: Uuid().v4(),
+      exercise: workout,
+      rep: [],
+      widgetId: widgetId,
+      restTime: 0,
+    );
+
+    session?.sets.add(newSet);
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
+  void removeWorkout(int index) {
+    workouts.removeAt(index);
+    notifyListeners();
+  }
+
+  Future<void> savePlan(BuildContext context) async {
+    if (session == null) {
+      print("No plan to save.");
+      return;
+    }
+
+    session?.startTime = DateTime.now();
+    session?.endTime = DateTime.now();
+
+    final body = {
+      "start_time": session!.startTime!.toIso8601String(),
+      "end_time": session!.endTime!.toIso8601String(),
+      "finished": true,
+      "set": session!.sets
+          .map((set) => {
+                "exercise": set.exercise.name,
+                "reps": set.rep.map((rep) => rep.toJson()).toList(),
+                "rest_time": set.restTime,
+              })
+          .toList(),
+    };
+
+    debugPrint(body.toString());
+    Navigator.pushNamed(context, '/home');
   }
 }
 
@@ -98,10 +131,17 @@ class PlanWorkoutScreen extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: workoutState.workouts.length,
                         itemBuilder: (context, index) {
+                          final workout = workoutState.workouts[index];
+                          final session = workoutState.session!;
                           return WorkoutWidget(
-                            selectedExercise: workoutState.workouts[index],
-                            widgetId: Uuid().v4(),
-                            onDelete: () {},
+                            selectedExercise: workout['workout'] as Exercise,
+                            session: session,
+                            widgetId: workout['widgetId'],
+                            onDelete: () {
+                              context
+                                  .read<PlanWorkoutState>()
+                                  .removeWorkout(index);
+                            },
                           );
                         },
                       ),
@@ -109,7 +149,7 @@ class PlanWorkoutScreen extends StatelessWidget {
                   : Column(
                       children: [
                         SizedBox(height: 16),
-                        Text('Add Exercises to your workout'),
+                        Text('Add Exercises to your plan'),
                       ],
                     );
             },
@@ -117,23 +157,14 @@ class PlanWorkoutScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Consumer<PlanWorkoutState>(
-                builder: (context, workoutState, child) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'Exercise time: ${workoutState.hours} h ${workoutState.minutes} min ${workoutState.seconds} s',
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  );
-                },
-              ),
               SizedBox(width: 30),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Finish'),
+                  onPressed: () {
+                    context.read<PlanWorkoutState>().savePlan(context);
+                  },
+                  child: Text('Save Plan'),
                 ),
               ),
             ],
