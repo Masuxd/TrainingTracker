@@ -17,7 +17,11 @@ class MainLayoutState extends State<MainLayout> {
       case 0:
         Navigator.pushNamed(context, '/home');
       case 1:
+        Navigator.pushNamed(context, '/calendar');
+      case 2:
         Navigator.pushNamed(context, '/profile');
+      case 3:
+        Navigator.pushNamed(context, '/settings');
     }
   }
 

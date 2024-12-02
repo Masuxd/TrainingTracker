@@ -5,36 +5,63 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/features/home/home_screen.dart';
 
 import './mock_users.dart';
+import '../../common/services/auth_service.dart';
+import '../../common/validators.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
-  Future<String?> _loginUser(LoginData data) {
-    return Future.delayed(loginTime).then((_) {
-      if (!mockUsers.containsKey(data.name)) {
-        return "User doesn't exist";
-      }
-      if (mockUsers[data.name] != data.password) {
-        return "Password does not match";
-      }
-      return null;
+  Future<String?> _loginUser(LoginData data) async {
+    bool loginSuccess = await login({
+      'email': data.name,
+      'password': data.password,
     });
+    if (!loginSuccess) {
+      return "Invalid email or password";
+    }
+    return null;
   }
 
-  Future<String?> _signupUser(SignupData data) {
-    return Future.delayed(loginTime).then((_) {
-      if (mockUsers.containsKey(data.name)) {
-        debugPrint("User already exists: ${data.name}");
-        return "User already exists";
+  Future<String?> _signupUser(SignupData data) async {
+    try {
+      debugPrint('Signup button pressed');
+      debugPrint(
+          'Signup info at client: ${data.name} ${data.email} ${data.password}');
+
+      String? email = data.name; // Use name field for email
+      String? username = data.additionalSignupData?['username'];
+      if (email == null || data.password == null || username == null) {
+        return "All fields are required";
       }
 
-      mockUsers[data.name!] = data.password!;
-      debugPrint("User signed up successfully: ${data.name}");
+      // Validate email, username, and password
+      String? emailError = validateEmail(email);
+      if (emailError != null) return emailError;
 
-      return null;
-    });
+      String? usernameError = validateUsername(username);
+      if (usernameError != null) return usernameError;
+
+      String? passwordError = validatePassword(data.password);
+      if (passwordError != null) return passwordError;
+
+      bool registerSuccess = await register({
+        'username': username,
+        'email': email,
+        'password': data.password,
+      });
+      if (!registerSuccess) {
+        return "Registration failed";
+      }
+
+      // Registration successful, navigate back to login screen
+      debugPrint("Registration successful. Please log in.");
+      return null; // Return null to indicate no error
+    } catch (e) {
+      debugPrint('Error during signup: $e');
+      return "An error occurred during registration";
+    }
   }
 
   Future<String?> _recoverPassword(String name) {
@@ -81,27 +108,16 @@ class LoginScreen extends StatelessWidget {
       //termsOfService: [],
       additionalSignupFields: [
         const UserFormField(
-          keyName: 'Username',
+          keyName: 'username',
+          displayName: 'Username',
           icon: Icon(FontAwesomeIcons.userLarge),
         ),
       ],
-      userValidator: (value) {
-        if (!value!.contains('@')) {
-          return "Email must contain '@'";
-        }
-        return null;
-      },
-      passwordValidator: (value) {
-        if (value!.isEmpty) {
-          return 'Password is empty';
-        }
+      /*
+      userValidator: validateEmail,
+      passwordValidator: validatePassword,
+      */
 
-        // TODO: how to validate password length on signup only
-        /*if (value.length < 5) {
-          return 'Password should be longer that 4 characters';
-        }*/
-        return null;
-      },
       onLogin: (loginData) {
         debugPrint('Login info');
         debugPrint('Email ${loginData.name}');
@@ -110,7 +126,7 @@ class LoginScreen extends StatelessWidget {
       },
       onSignup: (signupData) {
         debugPrint('Signup info');
-        debugPrint('Name ${signupData.name}');
+        debugPrint('Email ${signupData.name}');
         debugPrint('Password ${signupData.password}');
 
         signupData.additionalSignupData?.forEach((key, value) {
@@ -132,6 +148,10 @@ class LoginScreen extends StatelessWidget {
       headerWidget: const IntroWidget(),
     );
   }
+}
+
+extension SignupDataExtension on SignupData {
+  String? get email => additionalSignupData?['email'];
 }
 
 class IntroWidget extends StatelessWidget {

@@ -25,7 +25,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var state = context.watch<HomeScreenState>();
     debugPrint('HomeScreen built');
     return Center(
       child: Column(

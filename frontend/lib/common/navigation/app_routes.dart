@@ -4,6 +4,8 @@ import 'package:frontend/plan_workout.dart';
 import 'package:frontend/start_workout.dart';
 import '../../profile_screen.dart';
 import '../../features/home/home_screen.dart';
+import '../../calendar_screen.dart';
+import '../../settings_screen.dart';
 
 class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -12,8 +14,12 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => LoginScreen());
       case '/home':
         return MaterialPageRoute(builder: (_) => TrainingTracker());
+      case '/calendar':
+        return MaterialPageRoute(builder: (_) => CalendarScreenWrapper());
       case '/profile':
-        return MaterialPageRoute(builder: (_) => TrainingProfile());
+        return MaterialPageRoute(builder: (_) => ProfileScreenWrapper());
+      case '/settings':
+        return MaterialPageRoute(builder: (_) => SettingsScreenWrapper());
       case '/start-workout':
         return MaterialPageRoute(builder: (_) => StartWorkout());
       case '/plan-workout':
