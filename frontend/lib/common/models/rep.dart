@@ -1,7 +1,7 @@
 class Rep {
   int repetitions;
   int weight;
-  DateTime duration;
+  int duration;
   double distance;
   double speed;
 
@@ -17,7 +17,7 @@ class Rep {
     return Rep(
       repetitions: json['repetitions'],
       weight: json['weight'],
-      duration: DateTime.parse(json['duration']),
+      duration: json['duration'],
       distance: json['distance'],
       speed: json['speed'],
     );
@@ -27,7 +27,7 @@ class Rep {
     return {
       'repetitions': repetitions,
       'weight': weight,
-      'duration': duration.toIso8601String(),
+      'duration': duration,
       'distance': distance,
       'speed': speed,
     };

@@ -3,8 +3,8 @@ import 'set.dart';
 class TrainingPlan {
   final String id;
   final String userId;
-  DateTime startTime;
-  DateTime endTime;
+  DateTime? startTime;
+  DateTime? endTime;
   List<Set> sets;
 
   TrainingPlan({
@@ -29,8 +29,8 @@ class TrainingPlan {
     return {
       'id': id,
       'userId': userId,
-      'startTime': startTime.toIso8601String(),
-      'endTime': endTime.toIso8601String(),
+      'startTime': startTime?.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
       'sets': sets.map((set) => set.toJson()).toList(),
     };
   }
