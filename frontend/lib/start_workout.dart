@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
@@ -89,12 +87,10 @@ class StartWorkoutState extends ChangeNotifier {
       exercise: workout,
       rep: [],
       widgetId: widgetId,
+      restTime: 0,
     );
 
     session?.sets.add(newSet);
-
-    //debugPrint('Adding new workout: ${workout.name}');
-    //debugPrint('Widget ID: ${newSet.widgetId}, Set ID: ${newSet.setId}');
     notifyListeners();
   }
 
@@ -103,7 +99,7 @@ class StartWorkoutState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveSession() async {
+  Future<void> saveSession(BuildContext context) async {
     if (session == null) {
       print("No active session to save.");
       return;
@@ -118,7 +114,7 @@ class StartWorkoutState extends ChangeNotifier {
     };*/
 
     final body = {
-      "start_time": session!.startTime.toIso8601String(),
+      "start_time": session!.startTime!.toIso8601String(),
       "end_time": session!.endTime!.toIso8601String(),
       "finished": true,
       "set": session!.sets
@@ -145,6 +141,7 @@ class StartWorkoutState extends ChangeNotifier {
     } catch (error) {
       print("Failed to save session. Error: $error");
     }*/
+    Navigator.pushNamed(context, '/start-workout');
   }
 
   @override
@@ -186,8 +183,10 @@ class StartWorkoutScreen extends StatelessWidget {
                         itemCount: workoutState.workouts.length,
                         itemBuilder: (context, index) {
                           final workout = workoutState.workouts[index];
+                          final session = workoutState.session!;
                           return WorkoutWidget(
                             selectedExercise: workout['workout'] as Exercise,
+                            session: session,
                             widgetId: workout['widgetId'],
                             onDelete: () {
                               context
@@ -224,7 +223,8 @@ class StartWorkoutScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: ElevatedButton(
-                  onPressed: context.read<StartWorkoutState>().saveSession,
+                  onPressed: () =>
+                      context.read<StartWorkoutState>().saveSession(context),
                   child: Text('Finish'),
                 ),
               ),
