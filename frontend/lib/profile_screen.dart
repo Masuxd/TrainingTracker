@@ -216,8 +216,8 @@ class ProfileScreen extends StatelessWidget {
             ],
             rows: [
               DataRow(cells: [
-                DataCell(Text('           $totalWorkouts')),
-                DataCell(Text('           $totalTime')),
+                DataCell(Text('$totalWorkouts')),
+                DataCell(Text('$totalTime')),
               ]),
             ],
           ),

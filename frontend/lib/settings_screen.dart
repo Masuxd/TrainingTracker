@@ -5,8 +5,6 @@ import 'common/widgets/layout_widget.dart';
 import 'theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 
-
-
 class SettingsScreenWrapper extends StatelessWidget {
   const SettingsScreenWrapper({super.key});
 
@@ -27,16 +25,14 @@ class SettingsScreenState extends ChangeNotifier {}
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
-
-
-@override
+  @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsScreen> {
-
   bool valNotify2 = false; // Screen lock
   bool valNotify3 = false; // Unit of measure
+  bool isScreenLock = false;
 
   void onChangeFunction2(bool newValue2) {
     setState(() {
@@ -81,29 +77,30 @@ class _SettingsPageState extends State<SettingsScreen> {
               context,
               true,
             ),
-            buildNotificationOption(
-                "Screen lock", context, false, onChangeFunction2, valNotify2),
+            buildNotificationOption("Screen lock", context, false, (value) {
+              setState(() {
+                isScreenLock = value;
+              });
+            }, isScreenLock),
             buildNotificationOption("Unit of measure", context, false,
                 onChangeFunction3, valNotify3),
-                SizedBox(height: 50),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: (
-
-                    ) {
-
-                    },
-                    style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20), // Increase padding
-                    textStyle: const TextStyle(fontSize: 20), // Increase font size
-                    minimumSize: Size(200, 60), // Set a minimum size (width x height)
-                  ),
-                    child: Text(
-                    'Sign out',
-                  ),
-
-                    ),
-                )
+            SizedBox(height: 50),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 40, vertical: 20), // Increase padding
+                  textStyle:
+                      const TextStyle(fontSize: 20), // Increase font size
+                  minimumSize:
+                      Size(200, 60), // Set a minimum size (width x height)
+                ),
+                child: Text(
+                  'Log out',
+                ),
+              ),
+            )
           ],
         ),
       ),
