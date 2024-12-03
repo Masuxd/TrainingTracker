@@ -46,6 +46,7 @@ class _SettingsPageState extends State<SettingsScreen> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +88,10 @@ class _SettingsPageState extends State<SettingsScreen> {
             SizedBox(height: 50),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/login');
+                  
+                },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 40, vertical: 20), // Increase padding
@@ -96,9 +100,7 @@ class _SettingsPageState extends State<SettingsScreen> {
                   minimumSize:
                       Size(200, 60), // Set a minimum size (width x height)
                 ),
-                child: Text(
-                  'Log out',
-                ),
+                child: const Text('Log out'),
               ),
             )
           ],
