@@ -3,11 +3,9 @@ const Verification = require('../../models/verificationModel');
 
 const User = require('../../models/userModel');
 const bcrypt = require('bcrypt');
-const session = require('express-session');
 
 
 const register = async (req, res) => {
-
 try {
     console.log('Request body:', req.body);
 
@@ -16,8 +14,7 @@ try {
       return res.status(400).send('Bad Request: Request body is undefined');
     }
 
-const { username, password } = req.body;
-const email = req.body.email;
+const { email, username, password } = req.body;
 
 // Check that email has @ and .
 const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
@@ -74,7 +71,7 @@ const newVerification = new Verification({
 });
 await newVerification.save();
 
-const link = 'http://localhost:3000/auth/verify/' + verificationID;
+const link = `${process.env.API_URL}/auth/verify/${verificationID}`;
 const htmlMessage = `Hello! thanks for signing up! Please click <a href="${link}">here</a> to verify your email.<br>If the link is broken, please copy and paste the following URL into your browser: <br>${link}`;
 sendEmail(email, 'Please verify your email', htmlMessage);
 

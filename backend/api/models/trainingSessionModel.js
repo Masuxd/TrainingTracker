@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const trainingSessionSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
+  name: String,
   start_time: Date,
   end_time: Date,
   finished: Boolean,

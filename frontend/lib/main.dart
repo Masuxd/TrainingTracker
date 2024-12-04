@@ -4,10 +4,13 @@ import 'package:frontend/features/home/home_screen.dart';
 //import 'package:frontend/theme.dart';
 import 'package:provider/provider.dart';
 import './common/navigation/app_routes.dart';
+import './http_overrides.dart';
+import 'dart:io';
 import 'theme_provider.dart';
 //import './features/home/home_screen.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(ChangeNotifierProvider(
     create: (context) => ThemeProvider(),
     child: Main(),

@@ -1,15 +1,16 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "8080:80"
-    depends_on:
-      - mongodb
-      - api
+  #frontend:
+  #  build:
+  #    context: ./frontend
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8080:80"
+  #  depends_on:
+  #    - mongodb
+  #    - api
+
 
   mongodb:
     image: mongo:latest

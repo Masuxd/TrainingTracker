@@ -8,6 +8,6 @@ router.use(authenticateSession);
 
 router.get('/', exerciseController.getAllExercises);
 router.get('/:id', exerciseController.getExerciseById);
-router.get('/search', exerciseController.searchExercises);
+router.get('/search/:query', exerciseController.searchExercises);
 
 module.exports = router;
