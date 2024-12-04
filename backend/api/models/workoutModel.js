@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const workoutSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
-  isPlan: Boolean,
+  is_plan: Boolean,
   name: String,
   start_time: Date,
   end_time: Date,
