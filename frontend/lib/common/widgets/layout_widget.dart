@@ -8,10 +8,10 @@ class MainLayout extends StatefulWidget {
   MainLayout({required this.child, required this.currentIndex});
 
   @override
-  _MainLayoutState createState() => _MainLayoutState();
+  MainLayoutState createState() => MainLayoutState();
 }
 
-class _MainLayoutState extends State<MainLayout> {
+class MainLayoutState extends State<MainLayout> {
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
