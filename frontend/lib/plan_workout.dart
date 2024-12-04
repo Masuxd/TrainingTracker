@@ -36,6 +36,8 @@ class PlanWorkoutState extends ChangeNotifier {
     final sessionId = Uuid().v4();
     session = TrainingSession(
       sessionId: sessionId,
+      name: 'Plan',
+      isPlan: true,
       userId: mockUser.id,
       startTime: null,
       endTime: null,
@@ -43,11 +45,11 @@ class PlanWorkoutState extends ChangeNotifier {
     );
   }
 
-  void addWorkout(Exercise workout) {
-    if (session == null) {
-      createPlan();
-    }
+  PlanWorkoutState() {
+    createPlan();
+  }
 
+  void addWorkout(Exercise workout) {
     hasWorkout = true;
 
     final widgetId = Uuid().v4();
@@ -73,6 +75,11 @@ class PlanWorkoutState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateSessionName(String name) {
+    session?.name = name;
+    notifyListeners();
+  }
+
   Future<void> savePlan(BuildContext context) async {
     if (session == null) {
       print("No plan to save.");
@@ -83,6 +90,8 @@ class PlanWorkoutState extends ChangeNotifier {
     session?.endTime = DateTime.now();
 
     final body = {
+      "id": session!.sessionId,
+      "name": session!.name,
       "start_time": session!.startTime!.toIso8601String(),
       "end_time": session!.endTime!.toIso8601String(),
       "finished": true,
@@ -95,6 +104,13 @@ class PlanWorkoutState extends ChangeNotifier {
           .toList(),
     };
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Workout plan saved'),
+        duration: Duration(seconds: 3),
+      ),
+    );
+
     debugPrint(body.toString());
     Navigator.pushNamed(context, '/home');
   }
@@ -103,73 +119,91 @@ class PlanWorkoutState extends ChangeNotifier {
 class PlanWorkoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              final selectWorkout = SelectWorkout();
-              String? selectedWorkout = await selectWorkout.show(context);
-              if (selectedWorkout != null) {
-                Exercise selectedExercise = mockExercises
-                    .firstWhere((exercise) => exercise.name == selectedWorkout);
-                context.read<PlanWorkoutState>().addWorkout(selectedExercise);
-              }
-            },
-            child: Text('Add Exercise +'),
-          ),
-          Consumer<PlanWorkoutState>(
-            builder: (
-              context,
-              workoutState,
-              child,
-            ) {
-              return workoutState.hasWorkout
-                  ? SizedBox(
-                      height: 500,
-                      child: ListView.builder(
-                        itemCount: workoutState.workouts.length,
-                        itemBuilder: (context, index) {
-                          final workout = workoutState.workouts[index];
-                          final session = workoutState.session!;
-                          return WorkoutWidget(
-                            selectedExercise: workout['workout'] as Exercise,
-                            session: session,
-                            widgetId: workout['widgetId'],
-                            onDelete: () {
-                              context
-                                  .read<PlanWorkoutState>()
-                                  .removeWorkout(index);
-                            },
-                          );
-                        },
-                      ),
-                    )
-                  : Column(
-                      children: [
-                        SizedBox(height: 16),
-                        Text('Add Exercises to your plan'),
-                      ],
-                    );
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(width: 30),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.read<PlanWorkoutState>().savePlan(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.95,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  decoration: InputDecoration(labelText: 'Plan Name'),
+                  onChanged: (value) {
+                    context.read<PlanWorkoutState>().updateSessionName(value);
                   },
-                  child: Text('Save Plan'),
                 ),
-              ),
-            ],
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final selectWorkout = SelectWorkout();
+                    String? selectedWorkout = await selectWorkout.show(context);
+                    if (selectedWorkout != null) {
+                      Exercise selectedExercise = mockExercises.firstWhere(
+                          (exercise) => exercise.name == selectedWorkout);
+                      context
+                          .read<PlanWorkoutState>()
+                          .addWorkout(selectedExercise);
+                    }
+                  },
+                  child: Text('Add Exercise +'),
+                ),
+                Consumer<PlanWorkoutState>(
+                  builder: (
+                    context,
+                    workoutState,
+                    child,
+                  ) {
+                    return workoutState.hasWorkout
+                        ? SizedBox(
+                            height: 500,
+                            child: ListView.builder(
+                              itemCount: workoutState.workouts.length,
+                              itemBuilder: (context, index) {
+                                final workout = workoutState.workouts[index];
+                                final session = workoutState.session!;
+                                return WorkoutWidget(
+                                  selectedExercise:
+                                      workout['workout'] as Exercise,
+                                  session: session,
+                                  widgetId: workout['widgetId'],
+                                  onDelete: () {
+                                    context
+                                        .read<PlanWorkoutState>()
+                                        .removeWorkout(index);
+                                  },
+                                );
+                              },
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              SizedBox(height: 16),
+                              Text('Add Exercises to your plan'),
+                            ],
+                          );
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.read<PlanWorkoutState>().savePlan(context);
+                        },
+                        child: Text('Save Plan'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
