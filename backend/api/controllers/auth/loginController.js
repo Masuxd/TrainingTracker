@@ -24,7 +24,14 @@ const login = async (req, res) => {
   }
 
   req.session.userId = user._id;
+  req.session.save((err) => {
+    if (err) {
+      console.error('Error saving session:', err);
+      return res.sendStatus(500);
+    }
+  console.log('Session authenticated:', user, req.session);
   res.sendStatus(200);
+  });
 };
 
 module.exports = {
