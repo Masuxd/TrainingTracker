@@ -8,8 +8,9 @@ const https = require('https');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const exerciseRoutes = require('./routes/exercise');
-const trainingPlanRoutes = require('./routes/trainingPlan');
-const trainingSessionRoutes = require('./routes/trainingSession');
+const workoutRoutes = require('./routes/workout');
+const logRoutes = require('./routes/userLog');
+
 
 require('dotenv').config();
 
@@ -91,26 +92,14 @@ async function initializeSessionMiddleware() {
   console.log('Session middleware initialized');
 }
 
-app.use((req, res, next) => {
-  console.log('Request received:', req.method, req.url);
-  console.log('Request headers:', req.headers);
-  console.log('Request body:', req.body);
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log('Cookies:', req.cookies);
-  next();
-});
-
 
 // set routes
 async function setRoutes() {
   app.use('/auth', authRoutes);
   app.use('/user', userRoutes);
   app.use('/exercise', exerciseRoutes);
-  app.use('/trainingPlan', trainingPlanRoutes);
-  app.use('/trainingSession', trainingSessionRoutes);
+  app.use('/workout', workoutRoutes);
+  app.use('/logs', logRoutes);
 }
 
 
@@ -131,13 +120,9 @@ if (isDevelopment) {
 }
 
 
-/*
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-*/
-
 async function setupDevDatabase() {
+  const bcrypt = require('bcrypt');
+  const User = require('./models/userModel');
   try {
     const db = mongoose.connection;
     await db.dropDatabase();
@@ -162,8 +147,6 @@ async function setupDevDatabase() {
     console.log('Exercise data inserted successfully');
 
       try {
-        const bcrypt = require('bcrypt');
-        const User = require('./models/userModel');
         const testUsername = 'test';
         const testEmail = 'test@test.local';
         const testPassword = 'test123';
@@ -191,7 +174,40 @@ async function setupDevDatabase() {
       } catch (error) {
         console.error('Error creating test user:', error);
       }
+
+      try {
+        const testUsername = 'testadmin';
+        const testEmail = 'testadmin@test.local';
+        const testPassword = 'testadmin123';
+        const testRole = 'admin'; // Admin role
+    
+        // Check if the test admin user already exists
+        const existingUser = await User.findOne({ email: testEmail });
+        if (existingUser) {
+          console.log('Test admin user already exists');
+          return;
+        }
+    
+        // Hash the test admin user's password
+        const hashedTestPassword = await bcrypt.hash(testPassword, 10);
+    
+        // Create the test admin user
+        const testAdminUser = new User({
+          username: testUsername,
+          email: testEmail,
+          password: hashedTestPassword,
+          role: testRole, // Assign the admin role
+        });
+    
+        // Save the test admin user to the database
+        await testAdminUser.save();
+        console.log('Test admin user created successfully');
+      } catch (error) {
+        console.error('Error creating test admin user:', error);
+      }
+
   } catch (error) {
     console.error('Error initializing database:', error);
   }
 }
+
