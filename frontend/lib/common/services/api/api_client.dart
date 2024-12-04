@@ -4,7 +4,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'cookie_storage.dart';
 
-String baseUrl = 'https://localhost:3000';
+String baseUrl = 'https://www.trainintracker.space';
 
 /// Function to make requests using Dio with automatic cookie handling
 Future<Response?> request(

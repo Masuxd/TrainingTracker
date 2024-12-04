@@ -20,6 +20,11 @@ const port = process.env.PORT;
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 
+// Middleware to parse JSON and cookies
+app.use(express.json());
+app.set('trust proxy', true); // Ensures the original request scheme is recognized
+
+
 // Dynamic CORS configuration
 const corsOptions = (req, callback) => {
   let corsOptions;
@@ -27,7 +32,11 @@ const corsOptions = (req, callback) => {
 
   if (origin && origin.startsWith('https://')) {
     // Allow requests only from HTTPS origins
-    corsOptions = { origin: true, credentials: true, exposedHeaders: ['Set-Cookie'] };
+    corsOptions = {
+      origin: true,
+      credentials: true, // Allow cookies to be sent
+      exposedHeaders: ['Set-Cookie'], // Expose 'Set-Cookie' to the client
+    };
   } else {
     // Disallow other origins
     corsOptions = { origin: false };
@@ -36,8 +45,11 @@ const corsOptions = (req, callback) => {
   callback(null, corsOptions);
 };
 
-// Use the dynamic CORS configuration
+// Enable CORS with dynamic configuration
 app.use(cors(corsOptions));
+
+// Explicitly handle preflight OPTIONS requests
+app.options('*', cors(corsOptions));
 
 
 const mongoURI = process.env.MONGO_URI;
@@ -79,10 +91,15 @@ async function initializeSessionMiddleware() {
   console.log('Session middleware initialized');
 }
 
-// Add logging middleware
 app.use((req, res, next) => {
   console.log('Request received:', req.method, req.url);
   console.log('Request headers:', req.headers);
+  console.log('Request body:', req.body);
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log('Cookies:', req.cookies);
   next();
 });
 
