@@ -8,8 +8,7 @@ const https = require('https');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const exerciseRoutes = require('./routes/exercise');
-const trainingPlanRoutes = require('./routes/trainingPlan');
-const trainingSessionRoutes = require('./routes/trainingSession');
+const workoutRoutes = require('./routes/workout');
 const logRoutes = require('./routes/userLog');
 
 
@@ -99,8 +98,7 @@ async function setRoutes() {
   app.use('/auth', authRoutes);
   app.use('/user', userRoutes);
   app.use('/exercise', exerciseRoutes);
-  app.use('/trainingPlan', trainingPlanRoutes);
-  app.use('/trainingSession', trainingSessionRoutes);
+  app.use('/workout', workoutRoutes);
   app.use('/logs', logRoutes);
 }
 

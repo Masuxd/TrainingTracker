@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const trainingSessionController = require('../controllers/trainingSessionController');
+const workoutController = require('../controllers/workoutController');
 const { authenticateSession } = require('../middleware/sessionMiddleware');
 const logUserAction = require('../middleware/userLogMiddleware');
 
@@ -13,14 +13,14 @@ router.use(authenticateSession);
 
 router.get('/list', (req, res, next) => {
     next();
-  }, trainingSessionController.getTrainingSessionsByUserId);
+  }, workoutController.getWorkoutListByUserId);
 
 router.get('/:id', (req, res, next) => {
   next();
-}, trainingSessionController.getTrainingSessionById);
+}, workoutController.getWorkoutById);
 
-//router.get('/:id', trainingSessionController.getTrainingSessionById);
-//router.get('/list', trainingSessionController.getTrainingSessionsByUserId);
-router.post('/save', trainingSessionController.saveTrainingSession);
+//router.get('/:id', workoutController.getworkoutById);
+//router.get('/list', workoutController.getworkoutsByUserId);
+router.post('/save', workoutController.saveWorkout);
 
 module.exports = router;

@@ -1,26 +1,29 @@
 const mongoose = require('mongoose');
 
-const trainingSessionSchema = new mongoose.Schema({
+const workoutSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
+  isPlan: Boolean,
   name: String,
   start_time: Date,
   end_time: Date,
   finished: Boolean,
   set: [{
     exercise: mongoose.Schema.Types.ObjectId,
+    set_id: String,
+    widget_id: String,
     recovery_time: Date,
     finished: Boolean,
     rep: [{
         repetitions: Number,
         weight: Number,
-        duration: Date,
+        duration: Number,
         distance: Number,
         speed: Number,
         finished: Boolean,
     }]
     }],
-}, { collection: 'training_session' });
+}, { collection: 'workout' });
 
-const TrainingSession = mongoose.model('Training_session', trainingSessionSchema);
+const workout = mongoose.model('Workout', workoutSchema);
 
-module.exports = TrainingSession;
+module.exports = workout;
