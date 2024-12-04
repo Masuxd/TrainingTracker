@@ -42,10 +42,11 @@ async function saveWorkout(req, res) {
       return res.status(401).json({ error: 'Unauthorized: No workout found' });
     }
 
-    const { start_time, name, end_time, finished, set } = req.body;
+    const { is_plan, name, end_time, start_time, finished, set } = req.body;
 
     const newWorkout = new workout({
       user_id: userId,
+      is_plan: is_plan,
       name: name,
       start_time: start_time,
       end_time: end_time,
