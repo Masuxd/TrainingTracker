@@ -44,7 +44,7 @@ const mongoURI = process.env.MONGO_URI;
 
 // connect to the database
 mongoose.connect(mongoURI, {
-  ssl: true,
+  ssl: !isDevelopment,
   serverApi: {
     version: '1',
     strict: true,
