@@ -1,35 +1,48 @@
 import 'package:frontend/common/classes/rep.dart';
+import 'package:frontend/common/classes/exercise.dart';
 
 export 'set.dart';
 
 class Set {
-  String exerciseId;
-  DateTime recoveryTime;
+  final String setId;
+  final Exercise exercise;
+  //String exerciseId;
+  int restTime;
   bool finished;
-  List<Rep> reps;
+  List<Rep> rep;
+  final String widgetId;
 
   Set({
-    required this.exerciseId,
-    required this.recoveryTime,
+    required this.setId,
+    required this.exercise,
+    //required this.exerciseId,
+    required this.restTime,
     this.finished = false,
-    required this.reps,
+    required this.rep,
+    required this.widgetId,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      "exercise": exerciseId,
-      "recovery_time": recoveryTime.toIso8601String(),
+      "id": setId,
+      "exercise": exercise.toJson(),
+      //"exercise": exerciseId,
+      "recovery_time": restTime,
       "finished": finished,
-      "rep": reps.map((rep) => rep.toJson()).toList(),
+      "rep": rep.map((rep) => rep.toJson()).toList(),
+      "widgetId": widgetId,
     };
   }
 
   factory Set.fromJson(Map<String, dynamic> json) {
     return Set(
-      exerciseId: json['exercise'],
-      recoveryTime: DateTime.parse(json['recovery_time']),
+      setId: json['id'],
+      exercise: Exercise.fromJson(json['exercise']),
+      //exerciseId: json['exercise'],
+      restTime: json['recovery_time'],
       finished: json['finished'],
-      reps: (json['rep'] as List).map((item) => Rep.fromJson(item)).toList(),
+      rep: (json['rep'] as List).map((item) => Rep.fromJson(item)).toList(),
+      widgetId: json['widgetId'],
     );
   }
 }

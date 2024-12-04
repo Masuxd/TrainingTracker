@@ -22,7 +22,7 @@ Future<bool> login(Map<String, dynamic> credentials) async {
 
     //debugPrint(treenit.startTime.toString());
     List<Exercise> exercises = await fetchExercises() as List<Exercise>;
-    debugPrint("${exercises[0].name} ${exercises[0].id}");
+    debugPrint("${exercises[0].name} ${exercises[0].exerciseId}");
 
     return true;
   }

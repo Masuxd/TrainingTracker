@@ -1,24 +1,30 @@
-import '../common/models/exercise.dart';
+import '../common/classes/exercise.dart';
 
 // 'Name', 'Weight', 'Distance', 'Time'
 
 List<Exercise> mockExercises = [
   Exercise(
+    exerciseId: 'nynbcfg',
     name: 'Barbell Curl',
-    isWeight: true,
-    isDistance: false,
-    isTime: false,
+    weight: true,
+    distance: false,
+    duration: false,
+    speed: false,
   ),
   Exercise(
+    exerciseId: 'fngbbd',
     name: 'Treadmill',
-    isWeight: false,
-    isDistance: true,
-    isTime: true,
+    weight: false,
+    distance: true,
+    duration: true,
+    speed: true,
   ),
   Exercise(
+    exerciseId: 'stbtdndj',
     name: 'Rowing Machine',
-    isWeight: false,
-    isDistance: true,
-    isTime: true,
+    weight: false,
+    distance: true,
+    duration: true,
+    speed: false,
   ),
 ];

@@ -4,6 +4,7 @@ import 'api/api_client.dart'; // Importing the request function
 import '../classes/training_session.dart'; // Importing the TrainingSession class
 import '../classes/set.dart'; // Importing the Set class
 import '../classes/rep.dart';
+import '../classes/exercise.dart';
 
 /// Function to post a training session to the API
 Future<bool> postTrainingSession(TrainingSession session) async {
@@ -44,6 +45,7 @@ Future<List<TrainingSession>?> fetchTrainingSessionList() async {
     final response = await request('trainingSession/list');
     if (response != null && response.statusCode == 200) {
       List<dynamic> data = response.data;
+      debugPrint(data.toString());
       return data
           .map((json) => TrainingSession.fromJson(json))
           .toList(); // Convert JSON to list of TrainingSession
@@ -59,48 +61,62 @@ Future<List<TrainingSession>?> fetchTrainingSessionList() async {
 
 TrainingSession generateTrainingSession() {
   return TrainingSession(
+    sessionId: "672a15667182a036b826ac0a",
     name: "Test session",
+    isPlan: false,
     startTime: DateTime.parse("2023-10-01T10:00:00Z"),
     endTime: DateTime.parse("2023-10-01T11:00:00Z"),
     finished: true,
     sets: [
       Set(
-        exerciseId: "672a15667182a036b826ac0a",
-        recoveryTime: DateTime.parse("2023-10-01T10:05:00Z"),
+        //exerciseId: "672a15667182a036b826ac0a",
+        setId: "672a15667182a036b826ac0a",
+        exercise: Exercise(
+          exerciseId: "672a156",
+          name: "Bench press",
+          weight: true,
+          distance: false,
+          duration: false,
+          speed: false,
+        ),
+        restTime: 60,
         finished: true,
-        reps: [
+        rep: [
           Rep(
             repetitions: 10,
             weight: 50,
-            duration: DateTime.parse("2023-10-01T10:00:30Z"),
-            distance: 100,
-            speed: 10,
-            finished: true,
-          ),
-          Rep(
-            repetitions: 8,
-            weight: 55,
-            duration: DateTime.parse("2023-10-01T10:01:00Z"),
-            distance: 100,
-            speed: 10,
+            duration: 0,
+            distance: 0,
+            speed: 0,
             finished: true,
           ),
         ],
+        widgetId: "672a15667182a036b826acrdht",
       ),
       Set(
-        exerciseId: "672a15667182a036b826ac12",
-        recoveryTime: DateTime.parse("2023-10-01T10:15:00Z"),
+        //exerciseId: "672a15667182a036b826ac12",
+        setId: "672a15667182a036b826ac12",
+        exercise: Exercise(
+          exerciseId: "672a156",
+          name: "Squats",
+          weight: true,
+          distance: false,
+          duration: false,
+          speed: false,
+        ),
+        restTime: 60,
         finished: true,
-        reps: [
+        rep: [
           Rep(
             repetitions: 12,
-            weight: 40,
-            duration: DateTime.parse("2023-10-01T10:10:30Z"),
-            distance: 100,
-            speed: 10,
+            weight: 0,
+            duration: 0,
+            distance: 0,
+            speed: 0,
             finished: true,
           ),
         ],
+        widgetId: "672a156hbtrdh2a036b826acrdht",
       ),
     ],
   );

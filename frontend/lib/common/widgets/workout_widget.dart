@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/common/models/training_session.dart';
-import '../models/exercise.dart';
+import 'package:frontend/common/classes/training_session.dart';
+import '../classes/exercise.dart';
 import 'package:uuid/uuid.dart';
-import '../models/set.dart' as model;
-import '../models/rep.dart';
+import '../classes/set.dart' as model;
+import '../classes/rep.dart';
 
 class WorkoutWidget extends StatefulWidget {
   final Exercise selectedExercise;
@@ -144,7 +144,7 @@ class Set extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      if (selectedExercise.isWeight)
+      if (selectedExercise.weight)
         Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: Row(
@@ -206,7 +206,7 @@ class Set extends StatelessWidget {
             ],
           ),
         ),
-      if (selectedExercise.isDistance)
+      if (selectedExercise.distance)
         Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: TextField(
@@ -234,7 +234,7 @@ class Set extends StatelessWidget {
             },
           ),
         ),
-      if (selectedExercise.isTime)
+      if (selectedExercise.duration)
         Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: TextField(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../common/widgets/layout_widget.dart';
-import '../../mock_data/mock_users.dart';
+//import '../../mock_data/mock_users.dart';
 import '../../mock_data/mock_plans.dart';
 import '../../start_workout.dart';
+import '../../common/services/training_session_service.dart';
 
 class TrainingTracker extends StatelessWidget {
   const TrainingTracker({super.key});
@@ -21,9 +22,8 @@ class TrainingTracker extends StatelessWidget {
 }
 
 class HomeScreenState extends ChangeNotifier {
-  final user = mockUsers[0];
-  final plans =
-      mockPlans.where((plan) => plan.userId == mockUsers[0].id).toList();
+  //final user = mockUsers[0];
+  final plans = mockPlans.toList();
 }
 
 class HomeScreen extends StatelessWidget {

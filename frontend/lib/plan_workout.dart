@@ -4,12 +4,12 @@ import 'package:uuid/uuid.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
-import 'common/models/training_session.dart';
-import './common/models/exercise.dart';
+import 'common/classes/training_session.dart';
+import './common/classes/exercise.dart';
 import 'mock_data/mock_exercises.dart';
 import 'mock_data/mock_users.dart';
 import 'dart:async';
-import 'common/models/set.dart' as model;
+import 'common/classes/set.dart' as model;
 
 class PlanWorkout extends StatelessWidget {
   const PlanWorkout({super.key});
@@ -32,15 +32,15 @@ class PlanWorkoutState extends ChangeNotifier {
   TrainingSession? session;
 
   void createPlan() {
-    final mockUser = mockUsers[0];
+    //final mockUser = mockUsers[0];
     final sessionId = Uuid().v4();
     session = TrainingSession(
       sessionId: sessionId,
       name: 'Plan',
       isPlan: true,
-      userId: mockUser.id,
       startTime: null,
       endTime: null,
+      finished: false,
       sets: [],
     );
   }

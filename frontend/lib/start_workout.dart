@@ -4,14 +4,15 @@ import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
-import './common/models/exercise.dart';
+import './common/classes/exercise.dart';
 import 'mock_data/mock_exercises.dart';
-import './common/models/training_session.dart';
-import '../mock_data/mock_users.dart';
+import './common/classes/training_session.dart';
+//import '../mock_data/mock_users.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
-import 'common/models/set.dart' as model;
+import 'common/classes/set.dart' as model;
 import 'package:http/http.dart' as http;
+import './common/services/training_session_service.dart';
 
 class StartWorkout extends StatelessWidget {
   //const StartWorkout({super.key});
@@ -20,7 +21,7 @@ class StartWorkout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mockUser = mockUsers[0];
+    //final mockUser = mockUsers[0];
     TrainingSession workoutSession;
 
     workoutSession = session ??
@@ -28,9 +29,9 @@ class StartWorkout extends StatelessWidget {
           sessionId: Uuid().v4(),
           name: 'Workout',
           isPlan: false,
-          userId: mockUser.id,
           startTime: DateTime.now(),
           endTime: null,
+          finished: false,
           sets: [],
         );
     debugPrint('Start workout SessionId: ${session?.sessionId}');
@@ -56,16 +57,16 @@ class StartWorkoutState extends ChangeNotifier {
 
   void startSession() {
     debugPrint('SessionId startSession(): ${session!.sessionId}');
-    final mockUser = mockUsers[0];
+    //final mockUser = mockUsers[0];
     final sessionId = Uuid().v4();
     session = session ??
         TrainingSession(
           sessionId: sessionId,
           name: 'Workout',
           isPlan: false,
-          userId: mockUser.id,
           startTime: DateTime.now(),
           endTime: null,
+          finished: false,
           sets: [],
         );
     for (var set in session!.sets) {
@@ -144,44 +145,7 @@ class StartWorkoutState extends ChangeNotifier {
 
     session?.endTime = DateTime.now();
 
-    /*final url = Uri.parse('http://localhost:3000/sessions');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer <your-session-token>'
-    };*/
-
-    final body = {
-      "id": session!.sessionId,
-      "name": session!.name,
-      "start_time": session!.startTime!.toIso8601String(),
-      "end_time": session!.endTime!.toIso8601String(),
-      "finished": true,
-      "set": session!.sets
-          .map((set) => {
-                "exercise": set.exercise.name,
-                "reps": set.rep,
-              })
-          .toList(),
-    };
-
-    //final body = session!.toJson();
-    debugPrint('Body Session id: ${body['id']}');
-    debugPrint('Session name: ${body['name']}');
-    debugPrint('Session start time: ${body['start_time']}');
-    debugPrint('Session end time: ${body['end_time']}');
-    debugPrint('Session sets: ${body['set']}');
-
-    /*try {
-      final response =
-          await http.post(url, headers: headers, body: jsonEncode(body));
-      if (response.statusCode == 201) {
-        print("Session saved successfully.");
-      } else {
-        print("Failed to save session. Status code: ${response.body}");
-      }
-    } catch (error) {
-      print("Failed to save session. Error: $error");
-    }*/
+    //final success = await postTrainingSession(session!);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
