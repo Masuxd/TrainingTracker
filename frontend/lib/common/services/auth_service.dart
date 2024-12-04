@@ -13,11 +13,11 @@ Future<bool> login(Map<String, dynamic> credentials) async {
   if (response != null && response.statusCode == 200) {
     print("Login successful");
 
-    TrainingSession treeni = generateTrainingSession();
-    await postTrainingSession(treeni);
+    TrainingSession treeni = generateWorkout();
+    await postWorkout(treeni);
 
     List<TrainingSession> treenit =
-        (await fetchTrainingSessionList()) as List<TrainingSession>;
+        (await fetchWorkoutList()) as List<TrainingSession>;
     debugPrint(treenit[0].startTime.toString());
 
     //debugPrint(treenit.startTime.toString());

@@ -7,42 +7,42 @@ import '../classes/rep.dart';
 import '../classes/exercise.dart';
 
 /// Function to post a training session to the API
-Future<bool> postTrainingSession(TrainingSession session) async {
+Future<bool> postWorkout(TrainingSession session) async {
   final response = await request(
-    'trainingSession/save',
+    'workout/save',
     method: 'POST',
     data: session.toJson(), // Convert session to JSON
   );
 
   if (response != null && response.statusCode == 201) {
-    print("Training session posted successfully");
+    print("Workout posted successfully");
     return true;
   } else {
-    print("Failed to post training session");
+    print("Failed to post workout");
     return false;
   }
 }
 
-Future<TrainingSession?> fetchTrainingSession(String id) async {
+Future<TrainingSession?> fetchWorkout(String id) async {
   try {
-    final response = await request('trainingSession/$id');
+    final response = await request('workout/$id');
     debugPrint(response?.statusCode.toString());
     if (response != null && response.statusCode == 200) {
       return TrainingSession.fromJson(
           response.data); // Convert JSON to TrainingSession
     } else {
-      print("Failed to fetch training session");
+      print("Failed to fetch workout");
       return null;
     }
   } catch (e) {
-    print("Error fetching training session: $e");
+    print("Error fetching workout: $e");
     return null;
   }
 }
 
-Future<List<TrainingSession>?> fetchTrainingSessionList() async {
+Future<List<TrainingSession>?> fetchWorkoutList() async {
   try {
-    final response = await request('trainingSession/list');
+    final response = await request('workout/list');
     if (response != null && response.statusCode == 200) {
       List<dynamic> data = response.data;
       debugPrint(data.toString());
@@ -50,16 +50,16 @@ Future<List<TrainingSession>?> fetchTrainingSessionList() async {
           .map((json) => TrainingSession.fromJson(json))
           .toList(); // Convert JSON to list of TrainingSession
     } else {
-      print("Failed to fetch training sessions");
+      print("Failed to fetch workout");
       return null;
     }
   } catch (e) {
-    print("Error fetching training sessions: $e");
+    print("Error fetching workout: $e");
     return null;
   }
 }
 
-TrainingSession generateTrainingSession() {
+TrainingSession generateWorkout() {
   return TrainingSession(
     sessionId: "672a15667182a036b826ac0a",
     name: "Test session",
@@ -70,9 +70,9 @@ TrainingSession generateTrainingSession() {
     sets: [
       Set(
         //exerciseId: "672a15667182a036b826ac0a",
-        setId: "672a15667182a036b826ac0a",
+        setId: "672a1566718thdrt6b826ac0a",
         exercise: Exercise(
-          exerciseId: "672a156",
+          exerciseId: "672a15667182a036b826ac0a",
           name: "Bench press",
           weight: true,
           distance: false,
@@ -95,9 +95,9 @@ TrainingSession generateTrainingSession() {
       ),
       Set(
         //exerciseId: "672a15667182a036b826ac12",
-        setId: "672a15667182a036b826ac12",
+        setId: "672a15667rgr036b826ac12",
         exercise: Exercise(
-          exerciseId: "672a156",
+          exerciseId: "672a15667182a036b826ac12",
           name: "Squats",
           weight: true,
           distance: false,
