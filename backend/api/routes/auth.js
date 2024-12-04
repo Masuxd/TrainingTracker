@@ -6,6 +6,10 @@ const logoutController = require('../controllers/auth/logoutController');
 const registerController = require('../controllers/auth/registerController');
 const loginController = require('../controllers/auth/loginController');
 const resetPasswordController = require('../controllers/auth/passwordResetController');
+const logUserAction = require('../middleware/userLogMiddleware');
+
+// Middleware to log user actions
+router.use(logUserAction);
 
 router.post('/register', registerController.register);
 router.post('/login', loginController.login);

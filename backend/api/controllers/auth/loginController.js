@@ -2,7 +2,6 @@ const User = require('../../models/userModel'); // Adjust the path as necessary
 const bcrypt = require('bcrypt');
 
 const login = async (req, res) => {
-  console.log('Request body:', req.body);
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,10 +25,8 @@ const login = async (req, res) => {
   req.session.userId = user._id;
   req.session.save((err) => {
     if (err) {
-      console.error('Error saving session:', err);
       return res.sendStatus(500);
     }
-  console.log('Session authenticated:', user, req.session);
   res.sendStatus(200);
   });
 };

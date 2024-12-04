@@ -7,10 +7,8 @@ const bcrypt = require('bcrypt');
 
 const register = async (req, res) => {
 try {
-    console.log('Request body:', req.body);
 
     if (!req.body) {
-      console.error('Request body is undefined');
       return res.status(400).send('Bad Request: Request body is undefined');
     }
 
@@ -41,7 +39,7 @@ if (!passwordRegex.test(password)) {
 const existingUser = await User.findOne({ username });
 const existingEmail = await User.findOne({ email });
 
-if (existingUser) {
+if (existingUser || req.body.username === 'unauthorized' || req.body.username === 'admin') {
   return res.status(409).send('Username already in use');
 }
 
@@ -80,7 +78,6 @@ req.session.userId = newUser._id;
 res.sendStatus(201);
 
 } catch (error) {
-    console.error('Error during registration:', error);
     res.status(500).send('Internal Server Error: register');
 }
 
