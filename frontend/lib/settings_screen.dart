@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
 import 'theme_provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'common/services/auth_service.dart';
 
 class SettingsScreenWrapper extends StatelessWidget {
   const SettingsScreenWrapper({super.key});
@@ -45,7 +46,6 @@ class _SettingsPageState extends State<SettingsScreen> {
       valNotify3 = newValue3;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +89,8 @@ class _SettingsPageState extends State<SettingsScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  logout();
                   Navigator.pushReplacementNamed(context, '/login');
-                  
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
