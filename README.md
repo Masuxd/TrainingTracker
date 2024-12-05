@@ -7,6 +7,7 @@ Training tracker is an application designed for workout tracking and training pl
 Running demo:
 
 Frontend: folder /builds contains frontend.exe that can be used for testing frontend
+
 Backend: API is hosted on https://www.trainintracker.space
 
 Test credentials for loggin in:
