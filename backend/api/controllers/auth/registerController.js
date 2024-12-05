@@ -15,7 +15,7 @@ try {
 const { email, username, password } = req.body;
 
 // Check that email has @ and .
-const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+const emailRegex = /^[\w+.-]+(\.[\w+.-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 
 if (!emailRegex.test(email)) {
   return res.status(400).send('Invalid email format');
