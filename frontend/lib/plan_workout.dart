@@ -6,8 +6,6 @@ import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
 import 'common/classes/training_session.dart';
 import './common/classes/exercise.dart';
-import 'mock_data/mock_exercises.dart';
-import 'mock_data/mock_users.dart';
 import 'dart:async';
 import 'common/classes/set.dart' as model;
 import 'common/services/exercise_service.dart';

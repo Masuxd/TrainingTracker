@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/classes/exercise.dart';
-import '../../mock_data/mock_exercises.dart';
 import '../services/exercise_service.dart';
 
 class SelectWorkout extends StatefulWidget {

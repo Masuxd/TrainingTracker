@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
 import './common/classes/exercise.dart';
-import 'mock_data/mock_exercises.dart';
 import './common/classes/training_session.dart';
-//import '../mock_data/mock_users.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
 import 'common/classes/set.dart' as model;
@@ -47,6 +44,7 @@ class StartWorkout extends StatelessWidget {
 
 class StartWorkoutState extends ChangeNotifier {
   late TrainingSession? session;
+  bool initialPlanStatus = false;
   late Timer _timer;
   int _seconds = 0;
   int _minutes = 0;
@@ -121,6 +119,9 @@ class StartWorkoutState extends ChangeNotifier {
 
   Future<void> _initialize() async {
     await startSession();
+    if (session?.isPlan == true) {
+      initialPlanStatus = true;
+    }
   }
 
   int get seconds => _seconds;
@@ -172,6 +173,10 @@ class StartWorkoutState extends ChangeNotifier {
         ),
       );
       return;
+    }
+
+    if (initialPlanStatus) {
+      session?.isPlan = false;
     }
 
     session?.endTime = DateTime.now();

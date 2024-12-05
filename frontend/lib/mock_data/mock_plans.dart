@@ -1,6 +1,5 @@
 import 'package:uuid/uuid.dart';
 import '../common/classes/training_session.dart';
-import '../common/classes/exercise.dart';
 import '../common/classes/set.dart';
 import '../common/classes/rep.dart';
 

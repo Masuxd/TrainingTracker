@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/common/classes/training_plan.dart';
 import 'package:frontend/common/classes/training_session.dart';
 import 'package:provider/provider.dart';
 import '../../common/widgets/layout_widget.dart';
-//import '../../mock_data/mock_users.dart';
-import '../../mock_data/mock_plans.dart';
 import '../../start_workout.dart';
 import '../../common/services/training_session_service.dart';
 
@@ -29,7 +26,8 @@ class HomeScreenState extends ChangeNotifier {
   Future<List<TrainingSession>?> plans = fetchWorkoutList();
   Future<int> getPlansLength() async {
     final plansList = await plans;
-    return plansList?.length ?? 0;
+    final filteredPlans = plansList?.where((plan) => plan.isPlan).toList();
+    return filteredPlans?.length ?? 0;
   }
 }
 
@@ -91,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                               final session = plans?[index];
                               //debugPrint(session?.sessionId);
                               return ListTile(
-                                title: Text('${session?.name}' ?? 'No Name'),
+                                title: Text('${session?.name}'),
                                 onTap: () {
                                   Navigator.push(
                                     context,

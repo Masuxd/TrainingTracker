@@ -40,8 +40,7 @@ class CalendarScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Training Calendar'),
       ),
-      body:
-      Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TableCalendar(
@@ -71,11 +70,10 @@ class CalendarScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, 'start/plan workout'); //lisää treenisivu tähän
+          Navigator.pushNamed(context, '/plan-workout');
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 }
-

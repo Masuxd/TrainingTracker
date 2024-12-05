@@ -33,7 +33,9 @@ class WorkoutWidgetState extends State<WorkoutWidget> {
   Future<void> _fetchSelectedExercise() async {
     selectedExercise = await fetchExercise(widget.selectedExerciseId);
     //debugPrint('ExerciseId: ${widget.selectedExerciseId}');
-    setState(() {}); // Update the state to reflect the fetched exercise
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void updateReps(int index, Rep rep) {

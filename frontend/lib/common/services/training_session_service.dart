@@ -4,7 +4,6 @@ import 'api/api_client.dart'; // Importing the request function
 import '../classes/training_session.dart'; // Importing the TrainingSession class
 import '../classes/set.dart'; // Importing the Set class
 import '../classes/rep.dart';
-import '../classes/exercise.dart';
 
 /// Function to post a training session to the API
 Future<bool> postWorkout(TrainingSession session) async {

@@ -1,5 +1,4 @@
 import 'package:frontend/common/classes/rep.dart';
-import 'package:frontend/common/classes/exercise.dart';
 
 export 'set.dart';
 
