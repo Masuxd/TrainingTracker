@@ -1,7 +1,7 @@
 export 'exercise.dart';
 
 class Exercise {
-  String id;
+  String exerciseId;
   String name;
   bool weight;
   bool distance;
@@ -9,7 +9,7 @@ class Exercise {
   bool speed;
 
   Exercise({
-    required this.id,
+    required this.exerciseId,
     required this.name,
     this.weight = false,
     this.distance = false,
@@ -19,7 +19,7 @@ class Exercise {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": id,
+      "id": exerciseId,
       "name": name,
       "weight": weight,
       "distance": distance,
@@ -30,7 +30,7 @@ class Exercise {
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
-        id: json['_id'],
+        exerciseId: json['_id'],
         name: json['name'],
         weight: json['weight'],
         distance: json['distance'],

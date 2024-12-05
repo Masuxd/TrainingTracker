@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../mock_data/mock_exercises.dart';
+import 'package:frontend/common/classes/exercise.dart';
+import '../services/exercise_service.dart';
 
 class SelectWorkout extends StatefulWidget {
   @override
@@ -15,16 +16,25 @@ class SelectWorkout extends StatefulWidget {
 }
 
 class _SelectWorkoutState extends State<SelectWorkout> {
-  late List<String> options;
-  late List<String> filteredOptions;
+  late Future<List<Exercise>?> exercises;
+  List<Exercise> options = [];
+  List<Exercise> filteredOptions = [];
   final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    options = mockExercises.map((exercise) => exercise.name).toList();
-    filteredOptions = List.from(options);
+    _fetchExerciseList();
     searchController.addListener(_onSearchChanged);
+  }
+
+  Future<void> _fetchExerciseList() async {
+    final exercisesList = await fetchExercises();
+    setState(() {
+      options = exercisesList ?? [];
+      filteredOptions = options;
+    });
+    //debugPrint(options.toString());
   }
 
   @override
@@ -35,11 +45,10 @@ class _SelectWorkoutState extends State<SelectWorkout> {
   }
 
   void _onSearchChanged() {
+    final query = searchController.text.toLowerCase();
     setState(() {
       filteredOptions = options
-          .where((option) => option
-              .toLowerCase()
-              .contains(searchController.text.toLowerCase()))
+          .where((option) => option.name.toLowerCase().contains(query))
           .toList();
     });
   }
@@ -69,10 +78,12 @@ class _SelectWorkoutState extends State<SelectWorkout> {
               child: ListView.builder(
                 itemCount: filteredOptions.length,
                 itemBuilder: (context, index) {
+                  final exercise = filteredOptions[index];
                   return ListTile(
-                    title: Text(filteredOptions[index]),
+                    title: Text(exercise.name),
                     onTap: () {
-                      Navigator.pop(context, filteredOptions[index]);
+                      //debugPrint('Selected: ${exercise.name}');
+                      Navigator.pop(context, exercise.exerciseId);
                     },
                   );
                 },

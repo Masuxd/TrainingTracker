@@ -1,4 +1,4 @@
-import '../common/models/user.dart';
+/*import '../common/models/user.dart';
 
 List<User> mockUsers = [
   User(
@@ -25,4 +25,4 @@ List<User> mockUsers = [
     trainingSessions: [],
     trainingPlans: [],
   ),
-];
+];*/

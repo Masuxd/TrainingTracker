@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'common/widgets/layout_widget.dart';
 import 'common/widgets/workout_widget.dart';
 import 'common/widgets/select_workout.dart';
-import './common/models/exercise.dart';
-import 'mock_data/mock_exercises.dart';
-import './common/models/training_session.dart';
-import '../mock_data/mock_users.dart';
+import './common/classes/exercise.dart';
+import './common/classes/training_session.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
-import 'common/models/set.dart' as model;
-import 'package:http/http.dart' as http;
+import 'common/classes/set.dart' as model;
+import './common/services/training_session_service.dart';
+import './common/services/exercise_service.dart';
 
 class StartWorkout extends StatelessWidget {
   //const StartWorkout({super.key});
@@ -20,7 +18,7 @@ class StartWorkout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mockUser = mockUsers[0];
+    //final mockUser = mockUsers[0];
     TrainingSession workoutSession;
 
     workoutSession = session ??
@@ -28,12 +26,12 @@ class StartWorkout extends StatelessWidget {
           sessionId: Uuid().v4(),
           name: 'Workout',
           isPlan: false,
-          userId: mockUser.id,
           startTime: DateTime.now(),
           endTime: null,
+          finished: false,
           sets: [],
         );
-    debugPrint('Start workout SessionId: ${session?.sessionId}');
+    //debugPrint('Start workout SessionId: ${session?.sessionId}');
     return ChangeNotifierProvider(
       create: (context) => StartWorkoutState(workoutSession),
       child: MainLayout(
@@ -46,6 +44,7 @@ class StartWorkout extends StatelessWidget {
 
 class StartWorkoutState extends ChangeNotifier {
   late TrainingSession? session;
+  bool initialPlanStatus = false;
   late Timer _timer;
   int _seconds = 0;
   int _minutes = 0;
@@ -54,31 +53,49 @@ class StartWorkoutState extends ChangeNotifier {
   bool hasWorkout = false;
   List<Map<String, dynamic>> workouts = [];
 
-  void startSession() {
-    debugPrint('SessionId startSession(): ${session!.sessionId}');
-    final mockUser = mockUsers[0];
+  Future<void> startSession() async {
+    //debugPrint('Aloitus');
+    //debugPrint('SessionId startSession(): ${session!.sessionId}');
+    if (session?.sets != null) {
+      hasWorkout = true;
+
+      for (var set in session!.sets) {
+        //debugPrint('exerciseId startSession(): ${set.exerciseId}');
+        Exercise? exercise =
+            await fetchExercise(set.exerciseId); // Await the result
+        //debugPrint('Exercise ID StartSession(): ${exercise?.exerciseId}');
+        if (exercise != null) {
+          //hasWorkout = true;
+          //debugPrint('Exercise ID StartSession(): ${exercise.exerciseId}');
+          workouts.add({
+            'workoutId': exercise.exerciseId,
+            'widgetId': set.widgetId,
+          });
+          //debugPrint('Lisäys');
+          notifyListeners();
+        }
+      }
+    }
+    //debugPrint('hasWorkout startSession(): $hasWorkout');
+    //final mockUser = mockUsers[0];
     final sessionId = Uuid().v4();
     session = session ??
         TrainingSession(
           sessionId: sessionId,
           name: 'Workout',
           isPlan: false,
-          userId: mockUser.id,
           startTime: DateTime.now(),
           endTime: null,
+          finished: false,
           sets: [],
         );
-    for (var set in session!.sets) {
-      workouts.add({
-        'workout': set.exercise,
-        'widgetId': set.widgetId,
-      });
-    }
-    if (workouts.isNotEmpty) {
-      hasWorkout = true;
-    }
 
-    debugPrint('Session start time: ${session!.sessionId}');
+    /*if (workouts.isNotEmpty) {
+      debugPrint("tättärää");
+      hasWorkout = true;
+    }*/
+
+    //debugPrint('Session start time: ${session!.sessionId}');
   }
 
   StartWorkoutState(this.session) {
@@ -97,33 +114,44 @@ class StartWorkoutState extends ChangeNotifier {
 
       notifyListeners();
     });
+    _initialize();
+  }
 
-    startSession();
+  Future<void> _initialize() async {
+    await startSession();
+    if (session?.isPlan == true) {
+      initialPlanStatus = true;
+    }
   }
 
   int get seconds => _seconds;
   int get minutes => _minutes;
   int get hours => _hours;
 
-  void addWorkout(Exercise workout) {
+  Future<void> addWorkout(String workout) async {
     hasWorkout = true;
 
-    final widgetId = Uuid().v4();
-    workouts.add({
-      'workout': workout,
-      'widgetId': widgetId,
-    });
+    Exercise? exercise = await fetchExercise(workout);
+    if (exercise != null) {
+      final widgetId = Uuid().v4();
+      workouts.add({
+        'workoutId': exercise.exerciseId,
+        'widgetId': widgetId,
+      });
+      //debugPrint('Workout list: $workouts');
 
-    final newSet = model.Set(
-      setId: Uuid().v4(),
-      exercise: workout,
-      rep: [],
-      widgetId: widgetId,
-      restTime: 0,
-    );
+      session?.sets.add(
+        model.Set(
+          setId: Uuid().v4(),
+          exerciseId: workout,
+          rep: [],
+          widgetId: widgetId,
+          restTime: 0,
+        ),
+      );
 
-    session?.sets.add(newSet);
-    notifyListeners();
+      notifyListeners();
+    }
   }
 
   void removeWorkout(int index) {
@@ -137,51 +165,23 @@ class StartWorkoutState extends ChangeNotifier {
   }
 
   Future<void> saveSession(BuildContext context) async {
-    if (session == null) {
-      print("No active session to save.");
+    if (session == null || session!.sets.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No workout to save.'),
+          duration: Duration(seconds: 3),
+        ),
+      );
       return;
+    }
+
+    if (initialPlanStatus) {
+      session?.isPlan = false;
     }
 
     session?.endTime = DateTime.now();
 
-    /*final url = Uri.parse('http://localhost:3000/sessions');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer <your-session-token>'
-    };*/
-
-    final body = {
-      "id": session!.sessionId,
-      "name": session!.name,
-      "start_time": session!.startTime!.toIso8601String(),
-      "end_time": session!.endTime!.toIso8601String(),
-      "finished": true,
-      "set": session!.sets
-          .map((set) => {
-                "exercise": set.exercise.name,
-                "reps": set.rep,
-              })
-          .toList(),
-    };
-
-    //final body = session!.toJson();
-    debugPrint('Body Session id: ${body['id']}');
-    debugPrint('Session name: ${body['name']}');
-    debugPrint('Session start time: ${body['start_time']}');
-    debugPrint('Session end time: ${body['end_time']}');
-    debugPrint('Session sets: ${body['set']}');
-
-    /*try {
-      final response =
-          await http.post(url, headers: headers, body: jsonEncode(body));
-      if (response.statusCode == 201) {
-        print("Session saved successfully.");
-      } else {
-        print("Failed to save session. Status code: ${response.body}");
-      }
-    } catch (error) {
-      print("Failed to save session. Error: $error");
-    }*/
+    postWorkout(session!);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -201,10 +201,17 @@ class StartWorkoutState extends ChangeNotifier {
 }
 
 class StartWorkoutScreen extends StatelessWidget {
-  final TrainingSession? session;
-  const StartWorkoutScreen({super.key, this.session});
+  //const StartWorkoutScreen({super.key, this.session});
   @override
   Widget build(BuildContext context) {
+    //final session = context.read<StartWorkoutState>().session;
+
+    //debugPrint('StartWorkoutScreen SessionId: ${session?.sessionId}');
+    //debugPrint('legth StartWorkoutScreen: ${session?.sets.length}');
+    //debugPrint(
+    //  'hasWorkout screen: ${context.watch<StartWorkoutState>().hasWorkout}');
+    //debugPrint(
+    //  'Workouts List: ${context.watch<StartWorkoutState>().workouts.toString()}');
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -234,13 +241,13 @@ class StartWorkoutScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     final selectWorkout = SelectWorkout();
-                    String? selectedWorkout = await selectWorkout.show(context);
-                    if (selectedWorkout != null) {
-                      Exercise selectedExercise = mockExercises.firstWhere(
-                          (exercise) => exercise.name == selectedWorkout);
+                    String? selectedWorkoutId =
+                        await selectWorkout.show(context);
+                    //debugPrint('selectWorkout: $selectedWorkoutId');
+                    if (selectedWorkoutId != null) {
                       context
                           .read<StartWorkoutState>()
-                          .addWorkout(selectedExercise);
+                          .addWorkout(selectedWorkoutId);
                     }
                   },
                   child: Text('Add Exercise +'),
@@ -257,13 +264,22 @@ class StartWorkoutScreen extends StatelessWidget {
                             child: ListView.builder(
                               itemCount: workoutState.workouts.length,
                               itemBuilder: (context, index) {
+                                //debugPrint('Tättäträä');
                                 final workout = workoutState.workouts[index];
+                                final workoutId =
+                                    workout['workoutId'] as String?;
+                                final widgetId = workout['widgetId'] as String?;
+                                if (workoutId == null || widgetId == null) {
+                                  return SizedBox
+                                      .shrink(); // Handle null values
+                                }
+                                //debugPrint('Workout: $workoutId');
+                                //debugPrint('Widget ID: $widgetId');
                                 final session = workoutState.session!;
                                 return WorkoutWidget(
-                                  selectedExercise:
-                                      workout['workout'] as Exercise,
+                                  selectedExerciseId: workoutId,
                                   session: session,
-                                  widgetId: workout['widgetId'],
+                                  widgetId: widgetId,
                                   onDelete: () {
                                     context
                                         .read<StartWorkoutState>()

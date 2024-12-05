@@ -2,26 +2,26 @@ export 'rep.dart';
 
 class Rep {
   int repetitions;
-  double weight;
-  DateTime duration;
+  int weight;
+  int duration;
   double distance;
   double speed;
   bool finished;
 
   Rep({
     required this.repetitions,
-    this.weight = 0.0,
-    DateTime? duration,
+    this.weight = 0,
+    this.duration = 0,
     this.distance = 0.0,
     this.speed = 0.0,
     this.finished = false,
-  }) : duration = duration ?? DateTime(1970, 1, 1);
+  });
 
   Map<String, dynamic> toJson() {
     return {
       "repetitions": repetitions,
       "weight": weight,
-      "duration": duration.toIso8601String(),
+      "duration": duration,
       "distance": distance,
       "speed": speed,
       "finished": finished,
@@ -31,8 +31,8 @@ class Rep {
   factory Rep.fromJson(Map<String, dynamic> json) {
     return Rep(
       repetitions: json['repetitions'],
-      weight: (json['weight'] as num).toDouble(),
-      duration: DateTime.parse(json['duration']),
+      weight: (json['weight']),
+      duration: (json['duration']),
       distance: (json['distance'] as num).toDouble(),
       speed: (json['speed'] as num).toDouble(),
       finished: json['finished'],
