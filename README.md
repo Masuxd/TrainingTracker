@@ -29,3 +29,7 @@ Account verification does not currently work. the functions itself work but they
 Automatic sign in doesnt work, it has function in frontend to check wheter cookies already exist in flutter storage but it is not in use
 
 Recover password doesn't work. there is functionality for it in the backend but it is not implemented in frontend
+
+Profile page in frontend is only cosmetic and does not yet provide any functionality, except log out button and light/dark theme switch
+
+Calendar does not show workout plans or sessions
