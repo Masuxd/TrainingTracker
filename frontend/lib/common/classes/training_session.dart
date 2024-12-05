@@ -33,7 +33,7 @@ class TrainingSession {
 
   factory TrainingSession.fromJson(Map<String, dynamic> json) {
     return TrainingSession(
-      sessionId: json['id'],
+      sessionId: json['_id'],
       name: json['name'],
       isPlan: json['is_plan'],
       startTime: DateTime.parse(json['start_time']),

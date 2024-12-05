@@ -29,19 +29,19 @@ class Set {
       "recovery_time": restTime,
       "finished": finished,
       "rep": rep.map((rep) => rep.toJson()).toList(),
-      "widgetId": widgetId,
+      "widget_id": widgetId,
     };
   }
 
   factory Set.fromJson(Map<String, dynamic> json) {
     return Set(
-      setId: json['id'],
+      setId: json['_id'],
       //exercise: Exercise.fromJson(json['exercise']),
       exerciseId: json['exercise'],
       restTime: json['recovery_time'],
       finished: json['finished'],
+      widgetId: json['widget_id'],
       rep: (json['rep'] as List).map((item) => Rep.fromJson(item)).toList(),
-      widgetId: json['widgetId'],
     );
   }
 }
