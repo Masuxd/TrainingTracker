@@ -2,7 +2,7 @@ String? validateEmail(String? email) {
   if (email == null || email.isEmpty) {
     return 'Email is required';
   }
-  final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+  final emailRegex = RegExp(r'^[\w+.-]+@([\w-]+\.)+[a-zA-Z]{2,7}$');
   if (!emailRegex.hasMatch(email)) {
     return 'Invalid email format';
   }

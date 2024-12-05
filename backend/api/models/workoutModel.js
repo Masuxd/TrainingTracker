@@ -11,7 +11,7 @@ const workoutSchema = new mongoose.Schema({
     exercise: mongoose.Schema.Types.ObjectId,
     set_id: String,
     widget_id: String,
-    recovery_time: Date,
+    recovery_time: Number,
     finished: Boolean,
     rep: [{
         repetitions: Number,
