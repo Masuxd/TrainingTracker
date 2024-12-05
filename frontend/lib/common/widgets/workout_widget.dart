@@ -47,8 +47,7 @@ class WorkoutWidgetState extends State<WorkoutWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (var set in widget.session.sets)
-                      if (set.exercise.name == widget.selectedExercise.name &&
-                          set.widgetId == widget.widgetId)
+                      if (set.widgetId == widget.widgetId)
                         Column(
                           children: [
                             Row(
@@ -91,7 +90,7 @@ class WorkoutWidgetState extends State<WorkoutWidget> {
                       onPressed: () {
                         widget.session.sets.add(model.Set(
                           setId: Uuid().v4(),
-                          exercise: widget.selectedExercise,
+                          exerciseId: widget.selectedExercise.exerciseId,
                           rep: [],
                           widgetId: widget.widgetId,
                           restTime: 0,
@@ -106,10 +105,8 @@ class WorkoutWidgetState extends State<WorkoutWidget> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            widget.session.sets.removeWhere((set) =>
-                                set.exercise.name ==
-                                    widget.selectedExercise.name &&
-                                set.widgetId == widget.widgetId);
+                            widget.session.sets.removeWhere(
+                                (set) => set.widgetId == widget.widgetId);
                             widget.onDelete();
                           },
                           style: ElevatedButton.styleFrom(

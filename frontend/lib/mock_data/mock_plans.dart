@@ -15,13 +15,14 @@ final mockPlans = [
     sets: [
       Set(
         setId: Uuid().v4(),
-        exercise: Exercise(
+        exerciseId: '6751612bb3495ba2dc33518a',
+        /*exercise: Exercise(
             exerciseId: 'nynbcfg',
             name: 'Push Up',
             weight: false,
             distance: false,
             duration: false,
-            speed: false),
+            speed: false),*/
         restTime: 60,
         rep: [
           Rep(
@@ -37,14 +38,15 @@ final mockPlans = [
       ),
       Set(
         setId: Uuid().v4(),
-        exercise: Exercise(
+        exerciseId: '6751612bb3495ba2dc33518a',
+        /*exercise: Exercise(
           exerciseId: 'rbvxfhbh',
           name: 'Barbell Curll',
           weight: true,
           distance: false,
           duration: false,
           speed: false,
-        ),
+        ),*/
         restTime: 30,
         rep: [
           Rep(
@@ -69,13 +71,14 @@ final mockPlans = [
     sets: [
       Set(
         setId: Uuid().v4(),
-        exercise: Exercise(
+        exerciseId: '6751612bb3495ba2dc33518a',
+        /*exercise: Exercise(
             exerciseId: 'nynbcfg',
             name: 'Push Up',
             weight: false,
             distance: false,
             duration: false,
-            speed: false),
+            speed: false),*/
         restTime: 60,
         rep: [
           Rep(
@@ -91,14 +94,15 @@ final mockPlans = [
       ),
       Set(
         setId: Uuid().v4(),
-        exercise: Exercise(
+        exerciseId: '6751612bb3495ba2dc33518a',
+        /*exercise: Exercise(
           exerciseId: 'rbvxfhbh',
           name: 'Barbell Curll',
           weight: true,
           distance: false,
           duration: false,
           speed: false,
-        ),
+        ),*/
         restTime: 30,
         rep: [
           Rep(

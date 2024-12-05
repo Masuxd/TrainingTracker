@@ -5,8 +5,8 @@ export 'set.dart';
 
 class Set {
   final String setId;
-  final Exercise exercise;
-  //String exerciseId;
+  //final Exercise exercise;
+  String exerciseId;
   int restTime;
   bool finished;
   List<Rep> rep;
@@ -14,8 +14,8 @@ class Set {
 
   Set({
     required this.setId,
-    required this.exercise,
-    //required this.exerciseId,
+    //required this.exercise,
+    required this.exerciseId,
     required this.restTime,
     this.finished = false,
     required this.rep,
@@ -25,8 +25,7 @@ class Set {
   Map<String, dynamic> toJson() {
     return {
       "id": setId,
-      "exercise": exercise.toJson(),
-      //"exercise": exerciseId,
+      "exercise": exerciseId,
       "recovery_time": restTime,
       "finished": finished,
       "rep": rep.map((rep) => rep.toJson()).toList(),
@@ -37,8 +36,8 @@ class Set {
   factory Set.fromJson(Map<String, dynamic> json) {
     return Set(
       setId: json['id'],
-      exercise: Exercise.fromJson(json['exercise']),
-      //exerciseId: json['exercise'],
+      //exercise: Exercise.fromJson(json['exercise']),
+      exerciseId: json['exercise'],
       restTime: json['recovery_time'],
       finished: json['finished'],
       rep: (json['rep'] as List).map((item) => Rep.fromJson(item)).toList(),

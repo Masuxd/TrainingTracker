@@ -71,14 +71,7 @@ TrainingSession generateWorkout() {
       Set(
         //exerciseId: "672a15667182a036b826ac0a",
         setId: "672a1566718thdrt6b826ac0a",
-        exercise: Exercise(
-          exerciseId: "672a15667182a036b826ac0a",
-          name: "Bench press",
-          weight: true,
-          distance: false,
-          duration: false,
-          speed: false,
-        ),
+        exerciseId: '6751612bb3495ba2dc33518a',
         restTime: 60,
         finished: true,
         rep: [
@@ -92,12 +85,12 @@ TrainingSession generateWorkout() {
           ),
         ],
         widgetId: "672a15667182a036b826acrdht",
-      ),
-      Set(
+      )
+      /*Set(
         //exerciseId: "672a15667182a036b826ac12",
         setId: "672a15667rgr036b826ac12",
         exercise: Exercise(
-          exerciseId: "672a15667182a036b826ac12",
+          exerciseId: "6750b27b67020a4ce9ed5fc2",
           name: "Squats",
           weight: true,
           distance: false,
@@ -117,7 +110,7 @@ TrainingSession generateWorkout() {
           ),
         ],
         widgetId: "672a156hbtrdh2a036b826acrdht",
-      ),
+      ),*/
     ],
   );
 }

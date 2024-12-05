@@ -70,8 +70,10 @@ class StartWorkoutState extends ChangeNotifier {
           sets: [],
         );
     for (var set in session!.sets) {
+      Exercise exercise = mockExercises
+          .firstWhere((exercise) => exercise.exerciseId == set.exerciseId);
       workouts.add({
-        'workout': set.exercise,
+        'workout': exercise,
         'widgetId': set.widgetId,
       });
     }
@@ -117,7 +119,7 @@ class StartWorkoutState extends ChangeNotifier {
 
     final newSet = model.Set(
       setId: Uuid().v4(),
-      exercise: workout,
+      exerciseId: workout.exerciseId,
       rep: [],
       widgetId: widgetId,
       restTime: 0,

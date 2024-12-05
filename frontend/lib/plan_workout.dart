@@ -60,7 +60,7 @@ class PlanWorkoutState extends ChangeNotifier {
 
     final newSet = model.Set(
       setId: Uuid().v4(),
-      exercise: workout,
+      exerciseId: workout.exerciseId,
       rep: [],
       widgetId: widgetId,
       restTime: 0,
@@ -97,7 +97,7 @@ class PlanWorkoutState extends ChangeNotifier {
       "finished": true,
       "set": session!.sets
           .map((set) => {
-                "exercise": set.exercise.name,
+                "exerciseId": set.exerciseId,
                 "reps": set.rep.map((rep) => rep.toJson()).toList(),
                 "rest_time": set.restTime,
               })
