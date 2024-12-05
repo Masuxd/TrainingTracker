@@ -150,6 +150,7 @@ async function setupDevDatabase() {
         const testUsername = 'test';
         const testEmail = 'test@test.local';
         const testPassword = 'test123';
+        const verified = true;
     
         // Check if the test user already exists
         const existingUser = await User.findOne({ email: testEmail });
@@ -166,6 +167,7 @@ async function setupDevDatabase() {
           username: testUsername,
           email: testEmail,
           password: hashedTestPassword,
+          verified: verified
         });
     
         // Save the test user to the database
@@ -180,6 +182,7 @@ async function setupDevDatabase() {
         const testEmail = 'testadmin@test.local';
         const testPassword = 'testadmin123';
         const testRole = 'admin'; // Admin role
+        const verified = true;
     
         // Check if the test admin user already exists
         const existingUser = await User.findOne({ email: testEmail });
@@ -197,6 +200,7 @@ async function setupDevDatabase() {
           email: testEmail,
           password: hashedTestPassword,
           role: testRole, // Assign the admin role
+          verified: verified
         });
     
         // Save the test admin user to the database
