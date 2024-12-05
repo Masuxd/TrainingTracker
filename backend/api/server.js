@@ -149,7 +149,7 @@ async function setupDevDatabase() {
       try {
         const testUsername = 'test';
         const testEmail = 'test@test.local';
-        const testPassword = 'test123';
+        const testPassword = 'Salasana123!';
         const verified = true;
     
         // Check if the test user already exists
@@ -180,7 +180,7 @@ async function setupDevDatabase() {
       try {
         const testUsername = 'testadmin';
         const testEmail = 'testadmin@test.local';
-        const testPassword = 'testadmin123';
+        const testPassword = 'Salasana123!';
         const testRole = 'admin'; // Admin role
         const verified = true;
     

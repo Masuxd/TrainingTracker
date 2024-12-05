@@ -113,10 +113,9 @@ class LoginScreen extends StatelessWidget {
           icon: Icon(FontAwesomeIcons.userLarge),
         ),
       ],
-      /*
+
       userValidator: validateEmail,
       passwordValidator: validatePassword,
-      */
 
       onLogin: (loginData) {
         debugPrint('Login info');
