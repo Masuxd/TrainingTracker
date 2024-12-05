@@ -57,6 +57,7 @@ async function saveWorkout(req, res) {
     await newWorkout.save();
     res.status(201).json(newWorkout);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal Server Error: post workout' });
   }
 }
