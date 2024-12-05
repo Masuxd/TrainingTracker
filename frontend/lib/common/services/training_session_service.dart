@@ -71,7 +71,7 @@ TrainingSession generateWorkout() {
       Set(
         //exerciseId: "672a15667182a036b826ac0a",
         setId: "672a1566718thdrt6b826ac0a",
-        exerciseId: '6751612bb3495ba2dc33518a',
+        exerciseId: '675180cb6b3eb71c382c2c56',
         restTime: 60,
         finished: true,
         rep: [

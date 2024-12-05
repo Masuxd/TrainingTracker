@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/common/classes/training_plan.dart';
+import 'package:frontend/common/classes/training_session.dart';
 import 'package:provider/provider.dart';
 import '../../common/widgets/layout_widget.dart';
 //import '../../mock_data/mock_users.dart';
@@ -23,7 +25,12 @@ class TrainingTracker extends StatelessWidget {
 
 class HomeScreenState extends ChangeNotifier {
   //final user = mockUsers[0];
-  final plans = mockPlans.toList();
+  //final plans = mockPlans.toList();
+  Future<List<TrainingSession>?> plans = fetchWorkoutList();
+  Future<int> getPlansLength() async {
+    final plansList = await plans;
+    return plansList?.length ?? 0;
+  }
 }
 
 class HomeScreen extends StatelessWidget {
@@ -54,23 +61,55 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 50),
             Expanded(
-              child: ListView.builder(
-                  itemCount: context.read<HomeScreenState>().plans.length,
-                  itemBuilder: (context, index) {
-                    final session = mockPlans[index];
-                    return ListTile(
-                      title: Text('${session.name}'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                StartWorkout(session: session),
-                          ),
+              child: FutureBuilder<int>(
+                future: context.read<HomeScreenState>().getPlansLength(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                        child:
+                            CircularProgressIndicator()); // Show loading spinner while waiting
+                  } else if (snapshot.hasError) {
+                    return Center(
+                        child:
+                            Text('Error: ${snapshot.error}')); // Handle errors
+                  } else {
+                    final length = snapshot.data ?? 0; // Get the length
+                    return ListView.builder(
+                      itemCount: length,
+                      itemBuilder: (context, index) {
+                        return FutureBuilder<List<TrainingSession>?>(
+                          future: context.read<HomeScreenState>().plans,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            } else {
+                              final plans = snapshot.data;
+                              final session = plans?[index];
+                              //debugPrint(session?.sessionId);
+                              return ListTile(
+                                title: Text('${session?.name}' ?? 'No Name'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          StartWorkout(session: session),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          },
                         );
                       },
                     );
-                  }),
+                  }
+                },
+              ),
             ),
           ],
         ),

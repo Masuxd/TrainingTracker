@@ -1,4 +1,4 @@
-import 'package:frontend/common/classes/set.dart';
+/*import 'package:frontend/common/classes/set.dart';
 
 class TrainingSession {
   DateTime startTime;
@@ -30,4 +30,4 @@ class TrainingSession {
       sets: (json['set'] as List).map((item) => Set.fromJson(item)).toList(),
     );
   }
-}
+}*/

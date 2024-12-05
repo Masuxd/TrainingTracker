@@ -11,8 +11,8 @@ import './common/classes/training_session.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
 import 'common/classes/set.dart' as model;
-import 'package:http/http.dart' as http;
 import './common/services/training_session_service.dart';
+import './common/services/exercise_service.dart';
 
 class StartWorkout extends StatelessWidget {
   //const StartWorkout({super.key});
@@ -34,7 +34,7 @@ class StartWorkout extends StatelessWidget {
           finished: false,
           sets: [],
         );
-    debugPrint('Start workout SessionId: ${session?.sessionId}');
+    //debugPrint('Start workout SessionId: ${session?.sessionId}');
     return ChangeNotifierProvider(
       create: (context) => StartWorkoutState(workoutSession),
       child: MainLayout(
@@ -55,8 +55,30 @@ class StartWorkoutState extends ChangeNotifier {
   bool hasWorkout = false;
   List<Map<String, dynamic>> workouts = [];
 
-  void startSession() {
-    debugPrint('SessionId startSession(): ${session!.sessionId}');
+  Future<void> startSession() async {
+    //debugPrint('Aloitus');
+    //debugPrint('SessionId startSession(): ${session!.sessionId}');
+    if (session?.sets != null) {
+      hasWorkout = true;
+
+      for (var set in session!.sets) {
+        //debugPrint('exerciseId startSession(): ${set.exerciseId}');
+        Exercise? exercise =
+            await fetchExercise(set.exerciseId); // Await the result
+        //debugPrint('Exercise ID StartSession(): ${exercise?.exerciseId}');
+        if (exercise != null) {
+          //hasWorkout = true;
+          //debugPrint('Exercise ID StartSession(): ${exercise.exerciseId}');
+          workouts.add({
+            'workoutId': exercise.exerciseId,
+            'widgetId': set.widgetId,
+          });
+          //debugPrint('Lisäys');
+          notifyListeners();
+        }
+      }
+    }
+    //debugPrint('hasWorkout startSession(): $hasWorkout');
     //final mockUser = mockUsers[0];
     final sessionId = Uuid().v4();
     session = session ??
@@ -69,19 +91,13 @@ class StartWorkoutState extends ChangeNotifier {
           finished: false,
           sets: [],
         );
-    for (var set in session!.sets) {
-      Exercise exercise = mockExercises
-          .firstWhere((exercise) => exercise.exerciseId == set.exerciseId);
-      workouts.add({
-        'workout': exercise,
-        'widgetId': set.widgetId,
-      });
-    }
-    if (workouts.isNotEmpty) {
-      hasWorkout = true;
-    }
 
-    debugPrint('Session start time: ${session!.sessionId}');
+    /*if (workouts.isNotEmpty) {
+      debugPrint("tättärää");
+      hasWorkout = true;
+    }*/
+
+    //debugPrint('Session start time: ${session!.sessionId}');
   }
 
   StartWorkoutState(this.session) {
@@ -100,33 +116,41 @@ class StartWorkoutState extends ChangeNotifier {
 
       notifyListeners();
     });
+    _initialize();
+  }
 
-    startSession();
+  Future<void> _initialize() async {
+    await startSession();
   }
 
   int get seconds => _seconds;
   int get minutes => _minutes;
   int get hours => _hours;
 
-  void addWorkout(Exercise workout) {
+  Future<void> addWorkout(String workout) async {
     hasWorkout = true;
 
-    final widgetId = Uuid().v4();
-    workouts.add({
-      'workout': workout,
-      'widgetId': widgetId,
-    });
+    Exercise? exercise = await fetchExercise(workout);
+    if (exercise != null) {
+      final widgetId = Uuid().v4();
+      workouts.add({
+        'workoutId': exercise.exerciseId,
+        'widgetId': widgetId,
+      });
+      //debugPrint('Workout list: $workouts');
 
-    final newSet = model.Set(
-      setId: Uuid().v4(),
-      exerciseId: workout.exerciseId,
-      rep: [],
-      widgetId: widgetId,
-      restTime: 0,
-    );
+      session?.sets.add(
+        model.Set(
+          setId: Uuid().v4(),
+          exerciseId: workout,
+          rep: [],
+          widgetId: widgetId,
+          restTime: 0,
+        ),
+      );
 
-    session?.sets.add(newSet);
-    notifyListeners();
+      notifyListeners();
+    }
   }
 
   void removeWorkout(int index) {
@@ -140,14 +164,19 @@ class StartWorkoutState extends ChangeNotifier {
   }
 
   Future<void> saveSession(BuildContext context) async {
-    if (session == null) {
-      print("No active session to save.");
+    if (session == null || session!.sets.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No workout to save.'),
+          duration: Duration(seconds: 3),
+        ),
+      );
       return;
     }
 
     session?.endTime = DateTime.now();
 
-    //final success = await postTrainingSession(session!);
+    postWorkout(session!);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -167,10 +196,17 @@ class StartWorkoutState extends ChangeNotifier {
 }
 
 class StartWorkoutScreen extends StatelessWidget {
-  final TrainingSession? session;
-  const StartWorkoutScreen({super.key, this.session});
+  //const StartWorkoutScreen({super.key, this.session});
   @override
   Widget build(BuildContext context) {
+    //final session = context.read<StartWorkoutState>().session;
+
+    //debugPrint('StartWorkoutScreen SessionId: ${session?.sessionId}');
+    //debugPrint('legth StartWorkoutScreen: ${session?.sets.length}');
+    //debugPrint(
+    //  'hasWorkout screen: ${context.watch<StartWorkoutState>().hasWorkout}');
+    //debugPrint(
+    //  'Workouts List: ${context.watch<StartWorkoutState>().workouts.toString()}');
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -200,13 +236,13 @@ class StartWorkoutScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     final selectWorkout = SelectWorkout();
-                    String? selectedWorkout = await selectWorkout.show(context);
-                    if (selectedWorkout != null) {
-                      Exercise selectedExercise = mockExercises.firstWhere(
-                          (exercise) => exercise.name == selectedWorkout);
+                    String? selectedWorkoutId =
+                        await selectWorkout.show(context);
+                    //debugPrint('selectWorkout: $selectedWorkoutId');
+                    if (selectedWorkoutId != null) {
                       context
                           .read<StartWorkoutState>()
-                          .addWorkout(selectedExercise);
+                          .addWorkout(selectedWorkoutId);
                     }
                   },
                   child: Text('Add Exercise +'),
@@ -223,13 +259,22 @@ class StartWorkoutScreen extends StatelessWidget {
                             child: ListView.builder(
                               itemCount: workoutState.workouts.length,
                               itemBuilder: (context, index) {
+                                //debugPrint('Tättäträä');
                                 final workout = workoutState.workouts[index];
+                                final workoutId =
+                                    workout['workoutId'] as String?;
+                                final widgetId = workout['widgetId'] as String?;
+                                if (workoutId == null || widgetId == null) {
+                                  return SizedBox
+                                      .shrink(); // Handle null values
+                                }
+                                //debugPrint('Workout: $workoutId');
+                                //debugPrint('Widget ID: $widgetId');
                                 final session = workoutState.session!;
                                 return WorkoutWidget(
-                                  selectedExercise:
-                                      workout['workout'] as Exercise,
+                                  selectedExerciseId: workoutId,
                                   session: session,
-                                  widgetId: workout['widgetId'],
+                                  widgetId: widgetId,
                                   onDelete: () {
                                     context
                                         .read<StartWorkoutState>()
