@@ -90,6 +90,7 @@ class LoginScreen extends StatelessWidget {
       //onConfirmRecover:
       //onConfrimSignup:
       //loginAfterSignup: false,
+      /*
       loginProviders: [
         LoginProvider(
           icon: FontAwesomeIcons.google,
@@ -105,6 +106,7 @@ class LoginScreen extends StatelessWidget {
               return null;
             }),
       ],
+      */
       //termsOfService: [],
       additionalSignupFields: [
         const UserFormField(
